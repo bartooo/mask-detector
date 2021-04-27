@@ -3,6 +3,10 @@ import pathlib
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 
+# TODO: Add load() function
+# TODO: Visualize training results
+# TODO: Change loading of data
+
 
 class FaceMaskDetector:
     def __init__(
@@ -120,7 +124,3 @@ class FaceMaskDetector:
 
     def save_model(self, path):
         self.model.save(path, overwrite=True)
-
-    @property
-    def history(self):
-        return self.history
