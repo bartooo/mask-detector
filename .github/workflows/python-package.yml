@@ -5,7 +5,9 @@ name: Python package
 
 on:
   push:
-    branches: [ main client-server ]
+    branches: 
+      - main
+      - client-server
   pull_request:
     branches: [ main ]
 
