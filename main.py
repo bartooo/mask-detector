@@ -1,5 +1,25 @@
-if __name__ == "__main__":
-    print("Mask detected! XD")
+from face_mask_detector import FaceMaskDetector
+from parameters import (
+    DATA_DIR,
+    SAVE_DIR,
+    VAL_SPLIT,
+    SEED,
+    BATCH_SIZE,
+    IMG_WIDTH,
+    IMG_HEIGHT,
+    NUM_CLASSES,
+    EPOCHS,
+)
 
-    x = 123
-    print(" SADadsada d' ")
+if __name__ == "__main__":
+    mask_detector = FaceMaskDetector(
+        DATA_DIR,
+        VAL_SPLIT,
+        SEED,
+        IMG_HEIGHT,
+        IMG_WIDTH,
+        BATCH_SIZE,
+        NUM_CLASSES,
+        EPOCHS,
+    )
+    mask_detector.save_model(SAVE_DIR)
