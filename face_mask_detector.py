@@ -1,9 +1,9 @@
 import tensorflow as tf
 import pathlib
+from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 
-# TODO: Add load() function
 # TODO: Visualize training results
 # TODO: Change loading of data
 
@@ -11,14 +11,15 @@ from tensorflow.keras.models import Sequential
 class FaceMaskDetector:
     def __init__(
         self,
-        data_dir: str,
-        val_split: float,
-        seed: int,
-        img_height: int,
-        img_width: int,
-        batch_size: int,
-        num_classes: int,
-        epochs: int,
+        model_path: str = None,
+        data_dir: str = None,
+        val_split: float = None,
+        seed: int = None,
+        img_height: int = None,
+        img_width: int = None,
+        batch_size: int = None,
+        num_classes: int = None,
+        epochs: int = None,
     ) -> None:
         """
 
@@ -32,20 +33,23 @@ class FaceMaskDetector:
             num_classes (int): number of classes in dataset
             epochs (int): number of training epochs
         """
-        self.data_dir = pathlib.Path(data_dir)
-        self.val_split = val_split
-        self.seed = seed
-        self.img_height = img_height
-        self.img_width = img_width
-        self.batch_size = batch_size
-        self.num_classes = num_classes
-        self.epochs = epochs
+        if model_path is None:
+            self.data_dir = pathlib.Path(data_dir)
+            self.val_split = val_split
+            self.seed = seed
+            self.img_height = img_height
+            self.img_width = img_width
+            self.batch_size = batch_size
+            self.num_classes = num_classes
+            self.epochs = epochs
 
-        self._create_dataset()
-        self._conf_ds_for_performance()
-        self._create_model()
-        self._compile_model()
-        self._train_model()
+            self._create_dataset()
+            self._conf_ds_for_performance()
+            self._create_model()
+            self._compile_model()
+            self._train_model()
+        else:
+            self.model = keras.models.load_model(model_path)
 
     def _create_dataset(self):
         self.train_ds = self._create_train_ds()
@@ -124,3 +128,6 @@ class FaceMaskDetector:
 
     def save_model(self, path):
         self.model.save(path, overwrite=True)
+
+    def get_model_summary(self):
+        return self.model.summary()
