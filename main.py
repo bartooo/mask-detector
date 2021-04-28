@@ -12,5 +12,14 @@ from parameters import (
 )
 
 if __name__ == "__main__":
-    mask_detector = FaceMaskDetector("./model")
-    print(mask_detector.get_model_summary())
+    mask_detector = FaceMaskDetector(
+        DATA_DIR,
+        VAL_SPLIT,
+        SEED,
+        IMG_HEIGHT,
+        IMG_WIDTH,
+        BATCH_SIZE,
+        NUM_CLASSES,
+        EPOCHS,
+    )
+    # print(mask_detector.get_model_summary())
