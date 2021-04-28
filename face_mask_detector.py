@@ -1,8 +1,10 @@
+from logging import StreamHandler
 import tensorflow as tf
 import pathlib
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
+import numpy as np
 
 # TODO: Visualize training results
 # TODO: Change loading of data
@@ -53,6 +55,7 @@ class FaceMaskDetector:
 
     def _create_dataset(self):
         self.train_ds = self._create_train_ds()
+        self.class_names = self.train_ds.class_names
         self.val_ds = self._create_val_ds()
 
     def _create_train_ds(self):
@@ -126,8 +129,16 @@ class FaceMaskDetector:
             self.train_ds, validation_data=self.val_ds, epochs=self.epochs
         )
 
-    def save_model(self, path):
+    def save_model(self, path: str):
         self.model.save(path, overwrite=True)
 
     def get_model_summary(self):
         return self.model.summary()
+
+    def predict_img(self, img_array):
+        batch = tf.expand_dims(img_array, 0)
+        predictions = self.model.predict(batch)
+        score = tf.nn.softmax(predictions[0])
+        predicted_class = self.class_names[np.argmax(score)]
+        confidence = 100 * np.max(score)
+        return predicted_class, confidence
