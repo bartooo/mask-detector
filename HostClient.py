@@ -49,14 +49,15 @@ class HostClient:
             # receiving concrete data
             while len(data) < msg_size:
                 data += self.client_socket.recv(4 * 1024)
-            # getting frame of data
-            frame_data = data[:msg_size]
-            # setting data to whats left
+            # getting all data for current state
+            data_recv_pickled = data[:msg_size]
+            # setting data to whats left for next state
             data = data[msg_size:]
-            # load frame object
-            frame = pickle.loads(frame_data)
+            # unpickle what we got
+            data_recv = pickle.loads(data_recv_pickled)
             # show image and if q pressed - stop
-            cv2.imshow("RECEIVING VIDEO", frame)
+            cv2.imshow("RECEIVING VIDEO", data_recv.frame)
+            print(f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}%")
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
                 break

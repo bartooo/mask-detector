@@ -6,6 +6,8 @@ import pickle
 import struct
 import imutils
 import errno
+from datetime import datetime
+from DataPacker import DataPacker
 from ConnectionExceptions import WrongPortException, validate_port
 from typing import Any
 
@@ -51,9 +53,11 @@ class ServerDetector:
                 img, frame = vid.read()
                 # resize frame
                 frame = imutils.resize(frame, width=480)
+                # create data to send
+                data_to_send = DataPacker(frame, f'{datetime.now().strftime("%H:%M:%S")}', 50)
                 # pickle frame, pack and send
-                a = pickle.dumps(frame)
-                message = struct.pack("Q", len(a)) + a
+                pickled_to_send = pickle.dumps(data_to_send)
+                message = struct.pack("Q", len(pickled_to_send)) + pickled_to_send
                 conn.sendall(message)
 
         except socket.error as e:
