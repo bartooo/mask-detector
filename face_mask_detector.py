@@ -7,9 +7,6 @@ from tensorflow.keras.models import Sequential
 import numpy as np
 from dataset import Dataset
 
-# TODO: Visualize training results
-# TODO: Change loading of data
-
 
 class FaceMaskDetector:
     def __init__(
@@ -87,6 +84,12 @@ class FaceMaskDetector:
         return self.model.summary()
 
     def predict_img(self, img_array: np.array):
+        """
+        Predicts to which class belongs given image array.
+
+        Predicted class - either 'with_mask' or 'without_mask' string.
+        Confidence - percentage of model's confidence of classification.
+        """
         batch = tf.expand_dims(img_array, 0)
         predictions = self.model.predict(batch)
         score = tf.nn.softmax(predictions[0])
