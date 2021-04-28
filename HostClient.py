@@ -69,5 +69,6 @@ class HostClient:
 
 
 if __name__ == "__main__":
-    hostClient = HostClient("ubuntu", 8006)
+    # hostClient = HostClient("ubuntu", 8006)
+    hostClient = HostClient("DESKTOP-HT34P2E", 8006)
     hostClient.start()
