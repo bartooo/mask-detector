@@ -1,6 +1,6 @@
 from typing import Optional
 import tensorflow as tf
-
+import cv2
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
@@ -11,34 +11,33 @@ from dataset import Dataset
 class FaceMaskDetector:
     def __init__(
         self,
+        class_names: str,
+        model_path: Optional[str] = None,
         data_dir: Optional[str] = None,
         val_split: Optional[float] = None,
         seed: Optional[int] = None,
         img_height: Optional[int] = None,
         img_width: Optional[int] = None,
         batch_size: Optional[int] = None,
-        num_classes: Optional[int] = None,
         epochs: Optional[int] = None,
-        model_path: Optional[str] = None,
     ) -> None:
         """
 
         Args:
+            class_names (str): names of possible classes
+            model_path (str): path to trained model
             data_dir (str): address to directory of data files
             val_split (float): percentage of data that will be in validation dataset
             seed (int): random seed for shuffling and transformations
             img_height (int): height to resize images to after they are read from disk
             img_width (int): width to resize images to after they are read from disk
             batch_size (int): size of batches of data
-            model_path (str): path to trained model
-            num_classes (int): number of classes in dataset
             epochs (int): number of training epochs
         """
         if model_path is None:
             self.ds = Dataset(
                 data_dir, val_split, seed, img_height, img_width, batch_size
             )
-            self.num_classes = num_classes
             self.epochs = epochs
 
             self._create_model()
@@ -46,6 +45,8 @@ class FaceMaskDetector:
             self._train_model()
         else:
             self.model = keras.models.load_model(model_path)
+
+        self.class_names = class_names
 
     def _create_model(self) -> None:
         self.model = Sequential(
@@ -61,7 +62,7 @@ class FaceMaskDetector:
                 layers.MaxPooling2D(),
                 layers.Flatten(),
                 layers.Dense(128, activation="relu"),
-                layers.Dense(self.num_classes),
+                layers.Dense(len(self.class_names)),
             ]
         )
 

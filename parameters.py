@@ -8,5 +8,5 @@ BATCH_SIZE = 32
 IMG_WIDTH = 180
 IMG_HEIGHT = 180
 AUTOTUNE = tf.data.AUTOTUNE
-NUM_CLASSES = 2
+CLASS_NAMES=["with_mask", "without_mask"]
 EPOCHS = 5
