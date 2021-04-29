@@ -1,6 +1,5 @@
 from typing import Optional
 import tensorflow as tf
-import cv2
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
@@ -34,6 +33,8 @@ class FaceMaskDetector:
             batch_size (int): size of batches of data
             epochs (int): number of training epochs
         """
+        self.class_names = class_names
+
         if model_path is None:
             self.ds = Dataset(
                 data_dir, val_split, seed, img_height, img_width, batch_size
@@ -45,8 +46,6 @@ class FaceMaskDetector:
             self._train_model()
         else:
             self.model = keras.models.load_model(model_path)
-
-        self.class_names = class_names
 
     def _create_model(self) -> None:
         self.model = Sequential(
