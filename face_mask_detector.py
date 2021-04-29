@@ -96,4 +96,4 @@ class FaceMaskDetector:
         score = tf.nn.softmax(predictions[0])
         predicted_class = self.class_names[np.argmax(score)]
         confidence = 100 * np.max(score)
-        return predicted_class, confidence
+        return predicted_class, float(confidence)
