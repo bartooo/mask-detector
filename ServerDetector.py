@@ -10,6 +10,7 @@ from datetime import datetime
 from DataPacker import DataPacker
 from ConnectionExceptions import WrongPortException, validate_port
 from typing import Any
+from face_mask_detector import FaceMaskDetector
 
 
 class ServerDetector:
@@ -36,6 +37,7 @@ class ServerDetector:
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         # binding socket to address of server
         self.server_socket.bind((self.serv_addr, self.serv_port))
+        self.detector = FaceMaskDetector(model_path='./model/saved_model.pb')
 
     def handle_client(self, conn: socket, addr: Any) -> None:
         """Function handles connected client by sending him image from camera.
@@ -54,7 +56,8 @@ class ServerDetector:
                 # resize frame
                 frame = imutils.resize(frame, width=480)
                 # create data to send
-                data_to_send = DataPacker(frame, f'{datetime.now().strftime("%H:%M:%S")}', 50)
+                prediction, percentage = self.detector.predict_img(frame)
+                data_to_send = DataPacker(frame, f'{prediction}', percentage)
                 # pickle frame, pack and send
                 pickled_to_send = pickle.dumps(data_to_send)
                 message = struct.pack("Q", len(pickled_to_send)) + pickled_to_send
