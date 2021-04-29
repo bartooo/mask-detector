@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-DATA_DIR = "C:\\Users\\bartosz\\Desktop\\data"  # temporarily needs to be set locally
+DATA_DIR = "/home/bartosz/code/dataset"  # temporarily needs to be set locally
 SAVE_DIR = "./model"
 VAL_SPLIT = 0.2
 SEED = 123

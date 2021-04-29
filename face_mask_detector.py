@@ -33,25 +33,25 @@ class FaceMaskDetector:
             batch_size (int): size of batches of data
             epochs (int): number of training epochs
         """
-        self.class_names = class_names
+        self._class_names = class_names
 
         if model_path is None:
-            self.ds = Dataset(
+            self._ds = Dataset(
                 data_dir, val_split, seed, img_height, img_width, batch_size
             )
-            self.epochs = epochs
+            self._epochs = epochs
 
             self._create_model()
             self._compile_model()
             self._train_model()
         else:
-            self.model = keras.models.load_model(model_path)
+            self._model = keras.models.load_model(model_path)
 
     def _create_model(self) -> None:
-        self.model = Sequential(
+        self._model = Sequential(
             [
                 layers.experimental.preprocessing.Rescaling(
-                    1.0 / 255, input_shape=(self.ds.img_height, self.ds.img_width, 3)
+                    1.0 / 255, input_shape=(self._ds.img_height, self._ds.img_width, 3)
                 ),
                 layers.Conv2D(16, 3, padding="same", activation="relu"),
                 layers.MaxPooling2D(),
@@ -61,27 +61,27 @@ class FaceMaskDetector:
                 layers.MaxPooling2D(),
                 layers.Flatten(),
                 layers.Dense(128, activation="relu"),
-                layers.Dense(len(self.class_names)),
+                layers.Dense(len(self._class_names)),
             ]
         )
 
     def _compile_model(self) -> None:
-        self.model.compile(
+        self._model.compile(
             optimizer="adam",
             loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
             metrics=["accuracy"],
         )
 
     def _train_model(self) -> None:
-        self.history = self.model.fit(
-            self.ds.train_ds, validation_data=self.ds.val_ds, epochs=self.epochs
+        self._history = self._model.fit(
+            self._ds.train_ds, validation_data=self._ds.val_ds, epochs=self._epochs
         )
 
     def save_model(self, path: str) -> None:
-        self.model.save(path, overwrite=True)
+        self._model.save(path, overwrite=True)
 
     def get_model_summary(self):
-        return self.model.summary()
+        return self._model.summary()
 
     def predict_img(self, img_array: np.array):
         """
@@ -91,8 +91,9 @@ class FaceMaskDetector:
         Confidence - percentage of model's confidence of classification.
         """
         batch = tf.expand_dims(img_array, 0)
-        predictions = self.model.predict(batch)
+        predictions = self._model.predict(batch)
         score = tf.nn.softmax(predictions[0])
-        predicted_class = self.class_names[np.argmax(score)]
+        predicted_class = self._class_names[np.argmax(score)]
         confidence = 100 * np.max(score)
         return predicted_class, float(confidence)
+    

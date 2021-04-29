@@ -14,9 +14,9 @@ from parameters import (
 
 
 def main():
-    test_img = cv2.imread("./images/man_with_mask.jpg")
+    test_img = cv2.imread("./images/messi.jpg")
     test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2RGB)
-    test_img = cv2.resize(test_img, (180, 180))
+    test_img = cv2.resize(test_img, (IMG_WIDTH, IMG_HEIGHT))
     mask_detector = FaceMaskDetector(class_names=CLASS_NAMES, model_path=SAVE_DIR)
     predicted_class, confidence = mask_detector.predict_img(test_img)
     print(
