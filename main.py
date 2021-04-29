@@ -25,7 +25,7 @@ def main():
 
 
 if __name__ == "__main__":
-
+    """
     mask_detector = FaceMaskDetector(
         class_names=CLASS_NAMES,
         model_path=None,
@@ -38,4 +38,5 @@ if __name__ == "__main__":
         epochs=EPOCHS,
     )
     mask_detector.save_model(SAVE_DIR)
-    # main()
+    """
+    main()
