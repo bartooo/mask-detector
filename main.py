@@ -25,16 +25,17 @@ def main():
 
 
 if __name__ == "__main__":
-    """
+
     mask_detector = FaceMaskDetector(
-        DATA_DIR,
-        VAL_SPLIT,
-        SEED,
-        IMG_HEIGHT,
-        IMG_WIDTH,
-        BATCH_SIZE,
-        NUM_CLASSES,
-        EPOCHS,
+        class_names=CLASS_NAMES,
+        model_path=None,
+        data_dir=DATA_DIR,
+        val_split=VAL_SPLIT,
+        seed=SEED,
+        img_height=IMG_HEIGHT,
+        img_width=IMG_WIDTH,
+        batch_size=BATCH_SIZE,
+        epochs=EPOCHS,
     )
-    """
-    main()
+    mask_detector.save_model(SAVE_DIR)
+    # main()
