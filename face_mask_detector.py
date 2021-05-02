@@ -48,8 +48,19 @@ class FaceMaskDetector:
             self._model = keras.models.load_model(model_path)
 
     def _create_model(self) -> None:
+        data_augmentation = keras.Sequential(
+            [
+                layers.experimental.preprocessing.RandomFlip(
+                    "horizontal",
+                    input_shape=(self._ds.img_height, self._ds.img_width, 3),
+                ),
+                layers.experimental.preprocessing.RandomRotation(0.1),
+                layers.experimental.preprocessing.RandomZoom(0.1),
+            ]
+        )
         self._model = Sequential(
             [
+                data_augmentation,
                 layers.experimental.preprocessing.Rescaling(
                     1.0 / 255, input_shape=(self._ds.img_height, self._ds.img_width, 3)
                 ),
@@ -59,6 +70,7 @@ class FaceMaskDetector:
                 layers.MaxPooling2D(),
                 layers.Conv2D(64, 3, padding="same", activation="relu"),
                 layers.MaxPooling2D(),
+                layers.Dropout(0.2),
                 layers.Flatten(),
                 layers.Dense(128, activation="relu"),
                 layers.Dense(len(self._class_names)),
@@ -83,17 +95,21 @@ class FaceMaskDetector:
     def get_model_summary(self):
         return self._model.summary()
 
-    def predict_img(self, img_array: np.array):
+    def predict_img(self, img):
         """
         Predicts to which class belongs given image array.
 
         Predicted class - either 'with_mask' or 'without_mask' string.
         Confidence - percentage of model's confidence of classification.
         """
+        img_array = keras.preprocessing.image.img_to_array(img)
         batch = tf.expand_dims(img_array, 0)
         predictions = self._model.predict(batch)
         score = tf.nn.softmax(predictions[0])
         predicted_class = self._class_names[np.argmax(score)]
         confidence = 100 * np.max(score)
         return predicted_class, float(confidence)
-    
+
+    @property
+    def history(self):
+        return self._history

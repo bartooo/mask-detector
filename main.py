@@ -1,4 +1,5 @@
-import cv2
+import PIL
+from matplotlib import pyplot as plt
 from face_mask_detector import FaceMaskDetector
 from parameters import (
     DATA_DIR,
@@ -14,11 +15,12 @@ from parameters import (
 
 
 def main():
-    test_img = cv2.imread("./images/messi.jpg")
-    test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2RGB)
-    test_img = cv2.resize(test_img, (IMG_WIDTH, IMG_HEIGHT))
+    img = PIL.Image.open("./images/me_with_paper_mask.jpg")
+    img = img.resize((IMG_WIDTH, IMG_HEIGHT))
+    img = img.rotate(90)
+    img.show()
     mask_detector = FaceMaskDetector(class_names=CLASS_NAMES, model_path=SAVE_DIR)
-    predicted_class, confidence = mask_detector.predict_img(test_img)
+    predicted_class, confidence = mask_detector.predict_img(img)
     print(
         f"Image classified to: {predicted_class} with confidence of {confidence:.2f}%"
     )
