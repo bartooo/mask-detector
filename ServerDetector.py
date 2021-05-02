@@ -55,10 +55,10 @@ class ServerDetector:
                 # get frame
                 img, frame = vid.read()
                 # resize frame
-                frame = cv2.resize(frame, (IMG_WIDTH, IMG_HEIGHT))
+                frame_classify = cv2.resize(frame, (IMG_WIDTH, IMG_HEIGHT))
                 #frame = imutils.resize(frame, width=IMG_WIDTH)
                 # create data to send
-                prediction, percentage = self.detector.predict_img(frame)
+                prediction, percentage = self.detector.predict_img(frame_classify)
                 data_to_send = DataPacker(frame, prediction, percentage)
                 # pickle frame, pack and send
                 pickled_to_send = pickle.dumps(data_to_send)
