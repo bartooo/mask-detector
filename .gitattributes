@@ -1,0 +1,5 @@
+*.pb filter=lfs diff=lfs merge=lfs -text
+*.DATA-0000-OF-00001 filter=lfs diff=lfs merge=lfs -text
+*.INDEX filter=lfs diff=lfs merge=lfs -text
+haarcascade_frontalface_default.xml filter=lfs diff=lfs merge=lfs -text
+variables.data-00000-of-00001 filter=lfs diff=lfs merge=lfs -text
