@@ -9,51 +9,42 @@ import cv2
 from parameters import (
     IMG_WIDTH,
     IMG_HEIGHT,
+    EPOCHS,
     SCALE_FACTOR,
     MIN_SIZE,
     MIN_NEIGHBORS,
     COLOR_DICT,
+    CLASS_NAMES,
 )
 
 
 class FaceMaskDetector:
     def __init__(
         self,
-        class_names: str,
+        face_detector_path: str,
+        ds: Optional[Dataset] = None,
         model_path: Optional[str] = None,
-        data_dir: Optional[str] = None,
-        val_split: Optional[float] = None,
-        seed: Optional[int] = None,
-        batch_size: Optional[int] = None,
-        epochs: Optional[int] = None,
-        face_detector_path: Optional[str] = None,
     ) -> None:
         """
 
         Args:
-            class_names (str): names of possible classes
             model_path (str): path to trained model
-            data_dir (str): address to directory of data files
-            val_split (float): percentage of data that will be in validation dataset
-            seed (int): random seed for shuffling and transformations
-            batch_size (int): size of batches of data
-            epochs (int): number of training epochs
+            ds (Dataset): dataset used by model
             face_detector_path (str): path to face detector which will be used
         """
-        self._class_names = class_names
+
         self._face_detector = cv2.CascadeClassifier(face_detector_path)
 
-        if model_path is None:
-            self._ds = Dataset(
-                data_dir, val_split, seed, IMG_HEIGHT, IMG_WIDTH, batch_size
-            )
-            self._epochs = epochs
-
-            self._create_model()
-            self._compile_model()
-            self._train_model()
-        else:
+        if model_path is not None:
             self._model = keras.models.load_model(model_path)
+
+        if ds:
+            self._ds = ds
+
+    def create(self):
+        self._create_model()
+        self._compile_model()
+        self._train_model()
 
     def _create_model(self) -> None:
         data_augmentation = keras.Sequential(
@@ -78,7 +69,7 @@ class FaceMaskDetector:
                 layers.Dropout(0.2),
                 layers.Flatten(),
                 layers.Dense(128, activation="relu"),
-                layers.Dense(len(self._class_names)),
+                layers.Dense(len(CLASS_NAMES)),
             ]
         )
 
@@ -91,7 +82,7 @@ class FaceMaskDetector:
 
     def _train_model(self) -> None:
         self._history = self._model.fit(
-            self._ds.train_ds, validation_data=self._ds.val_ds, epochs=self._epochs
+            self._ds.train_ds, validation_data=self._ds.val_ds, epochs=EPOCHS
         )
 
     def save_model(self, path: str) -> None:
@@ -149,7 +140,7 @@ class FaceMaskDetector:
             batch = tf.expand_dims(face_img, 0)
             predictions = self._model.predict(batch)
             score = tf.nn.softmax(predictions[0])
-            predicted_class = self._class_names[np.argmax(score)]
+            predicted_class = CLASS_NAMES[np.argmax(score)]
             confidence = 100 * np.max(score)
             self._draw_info_on_image(img_haar, x, y, w, h, predicted_class, confidence)
 
