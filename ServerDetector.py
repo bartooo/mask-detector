@@ -11,7 +11,7 @@ from DataPacker import DataPacker
 from ConnectionExceptions import WrongPortException, validate_port
 from typing import Any
 from face_mask_detector import FaceMaskDetector
-from parameters import IMG_HEIGHT, IMG_WIDTH, CLASS_NAMES, SAVE_DIR, FACE_DETECTOR_PATH
+from parameters import IMG_HEIGHT, IMG_WIDTH, SAVE_DIR, FACE_DETECTOR_PATH
 
 
 class ServerDetector:
@@ -39,9 +39,8 @@ class ServerDetector:
         # binding socket to address of server
         self.server_socket.bind((self.serv_addr, self.serv_port))
         self.detector = FaceMaskDetector(
-            class_names=CLASS_NAMES,
-            model_path=SAVE_DIR,
             face_detector_path=FACE_DETECTOR_PATH,
+            model_path=SAVE_DIR,
         )
 
     def handle_client(self, conn: socket, addr: Any) -> None:
