@@ -1,4 +1,4 @@
-﻿absl-py==0.12.0
+absl-py==0.12.0
 appdirs==1.4.4
 astunparse==1.6.3
 atomicwrites==1.4.0
@@ -10,15 +10,16 @@ chardet==4.0.0
 click==7.1.2
 colorama==0.4.4
 flatbuffers==1.12
-gast==0.3.3
+gast==0.4.0
 google-auth==1.30.0
 google-auth-oauthlib==0.4.4
 google-pasta==0.2.0
-grpcio==1.32.0
-h5py==2.10.0
+grpcio==1.34.0
+h5py==3.1.0
 idna==2.10
 imutils==0.5.4
 iniconfig==1.1.1
+keras-nightly==2.5.0.dev2021032900
 Keras-Preprocessing==1.1.2
 Markdown==3.3.4
 mypy-extensions==0.4.3

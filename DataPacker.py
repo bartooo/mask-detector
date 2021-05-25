@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from DataExceptions import validate_datapacker_params
 
+
 class DataPacker(object):
     def __init__(self, frame: np.ndarray, decision: str, percentage: float):
         """DataPacker construtor.
@@ -15,7 +16,7 @@ class DataPacker(object):
         self._frame = frame
         self._decision = decision
         self._percentage = percentage
-    
+
     @property
     def frame(self) -> np.ndarray:
         """Frame getter.
@@ -24,7 +25,7 @@ class DataPacker(object):
             np.ndarray: Object's frame.
         """
         return self._frame
-    
+
     @property
     def decision(self) -> str:
         """Decision getter.
@@ -33,7 +34,7 @@ class DataPacker(object):
             str: Object's decision.
         """
         return self._decision
-    
+
     @property
     def percentage(self) -> float:
         """Percentage getter.

@@ -3,9 +3,9 @@ import numpy as np
 
 MAX_DECISION_LENGTH = 1000
 
+
 class DataPackerException(Exception):
-    """Raised when DataPacker initialization faced an error. 
-    """
+    """Raised when DataPacker initialization faced an error."""
 
 
 def validate_frame(frame: Any) -> None:
@@ -19,7 +19,7 @@ def validate_frame(frame: Any) -> None:
     """
     if type(frame) != np.ndarray:
         raise DataPackerException("Wrong type of frame! Should be np.ndarray!")
-    elif frame.shape[0] <=0 or frame.shape[1] <=0:
+    elif frame.shape[0] <= 0 or frame.shape[1] <= 0:
         raise DataPackerException("Error while getting frame - shapes shouldnt be <=0!")
 
 
@@ -36,7 +36,9 @@ def validate_percentage(percentage: Any) -> None:
         raise DataPackerException("Wrong type of percentage! Should be float/int!")
     else:
         if percentage < 0 or percentage > 100:
-            raise DataPackerException("Percentage should be a number between 0 and 100!")
+            raise DataPackerException(
+                "Percentage should be a number between 0 and 100!"
+            )
 
 
 def validate_decision(decision: Any) -> None:
@@ -51,7 +53,9 @@ def validate_decision(decision: Any) -> None:
     if type(decision) != str:
         raise DataPackerException("Wrong type of decision! Should be str!")
     elif len(decision) <= 0 or len(decision) >= MAX_DECISION_LENGTH:
-        raise DataPackerException(f"Wrong length of decision! Should be between 0 and {MAX_DECISION_LENGTH}!")
+        raise DataPackerException(
+            f"Wrong length of decision! Should be between 0 and {MAX_DECISION_LENGTH}!"
+        )
 
 
 def validate_datapacker_params(frame: Any, decision: Any, percentage: Any) -> None:
