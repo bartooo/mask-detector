@@ -4,8 +4,11 @@ from parameters import FACE_DETECTOR_PATH, SAVE_DIR, IMG_HEIGHT, IMG_WIDTH
 import cv2
 import os
 
+# mask_detector = FaceMaskDetector(
+#     face_detector_path=FACE_DETECTOR_PATH, model_path=SAVE_DIR
+# )
 mask_detector = FaceMaskDetector(
-    face_detector_path=FACE_DETECTOR_PATH, model_path=SAVE_DIR
+    face_detector_path=os.path.abspath(os.getcwd())+"/haar-classifier/haarcascade_frontalface_default.xml", model_path=os.path.abspath(os.getcwd())+"/model/"
 )
 images_path = os.path.abspath(os.getcwd()) + "/images/"
 
