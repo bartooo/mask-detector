@@ -57,7 +57,9 @@ class HostClient:
             data_recv = pickle.loads(data_recv_pickled)
             # show image and if q pressed - stop
             cv2.imshow("RECEIVING VIDEO", data_recv.frame)
-            print(f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}%")
+            print(
+                f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}%"
+            )
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
                 break
@@ -71,5 +73,6 @@ class HostClient:
 
 if __name__ == "__main__":
     # hostClient = HostClient("ubuntu", 8006)
-    hostClient = HostClient("DESKTOP-HT34P2E", 8006)
+    # hostClient = HostClient("pc", 8006)
+    # hostClient = HostClient("DESKTOP-HT34P2E", 8006)
     hostClient.start()
