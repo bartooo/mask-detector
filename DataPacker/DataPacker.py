@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
-from DataExceptions import validate_datapacker_params
-
+import sys
+from DetectorExceptions.DataExceptions import validate_datapacker_params
 
 class DataPacker(object):
     def __init__(self, frame: np.ndarray, decision: str, percentage: float):

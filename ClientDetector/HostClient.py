@@ -2,8 +2,9 @@ import socket
 import cv2
 import pickle
 import struct
-from ConnectionExceptions import WrongPortException, validate_port
-
+import sys
+from DetectorExceptions.ConnectionExceptions import WrongPortException, validate_port
+from DataPacker.DataPacker import DataPacker
 
 class HostClient:
     """Class represents single host-client, which connects to given server
@@ -69,10 +70,3 @@ class HostClient:
     def disconnect(self):
         """Simple function disconnects from server."""
         self.client_socket.close()
-
-
-if __name__ == "__main__":
-    hostClient = HostClient("ubuntu", 8006)
-    # hostClient = HostClient("pc", 8006)
-    # hostClient = HostClient("DESKTOP-HT34P2E", 8006)
-    hostClient.start()

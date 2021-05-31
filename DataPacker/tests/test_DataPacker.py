@@ -1,13 +1,13 @@
 import pytest
-from DataPacker import DataPacker
+from DataPacker.DataPacker import DataPacker
 import cv2
 import numpy as np
-import DataExceptions as d_exc
+import DetectorExceptions.DataExceptions as d_exc
 
 
 def test_getters():
     correct_image = cv2.imread(
-        "tests/img_for_datapacker_test.jpg", cv2.IMREAD_UNCHANGED
+        "./ServerDetector/tests/img_for_datapacker_test.jpg", cv2.IMREAD_UNCHANGED
     )
     correct_percentage = 70.2
     correct_decision = "No mask!"
@@ -27,7 +27,7 @@ def test_getters():
 
 def test_validation():
     correct_image = cv2.imread(
-        "tests/img_for_datapacker_test.jpg", cv2.IMREAD_UNCHANGED
+        "./ServerDetector/tests/img_for_datapacker_test.jpg", cv2.IMREAD_UNCHANGED
     )
     correct_percentage = 70.2
     correct_decision = "No mask!"

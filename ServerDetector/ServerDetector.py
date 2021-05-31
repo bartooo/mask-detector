@@ -7,11 +7,12 @@ import struct
 import imutils
 import errno
 from datetime import datetime
-from DataPacker import DataPacker
-from ConnectionExceptions import WrongPortException, validate_port
 from typing import Any
-from face_mask_detector import FaceMaskDetector
-from parameters import IMG_HEIGHT, IMG_WIDTH, SAVE_DIR, FACE_DETECTOR_PATH
+import sys
+from ServerDetector.face_mask_detector import FaceMaskDetector
+from ServerDetector.parameters import IMG_HEIGHT, IMG_WIDTH, SAVE_DIR, FACE_DETECTOR_PATH
+from DataPacker.DataPacker import DataPacker
+from DetectorExceptions.ConnectionExceptions import WrongPortException, validate_port
 
 
 class ServerDetector:
@@ -99,8 +100,3 @@ class ServerDetector:
                 thread = threading.Thread(target=self.handle_client, args=(conn, addr))
                 thread.start()
                 print(f"[SERVER] ACIVE CONNECTIONS={threading.activeCount() - 1}")
-
-
-if __name__ == "__main__":
-    serverDetector = ServerDetector("0.0.0.0", 8006)
-    serverDetector.listen()
