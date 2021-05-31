@@ -10,7 +10,12 @@ from datetime import datetime
 from typing import Any
 import sys
 from ServerDetector.face_mask_detector import FaceMaskDetector
-from ServerDetector.parameters import IMG_HEIGHT, IMG_WIDTH, SAVE_DIR, FACE_DETECTOR_PATH
+from ServerDetector.parameters import (
+    IMG_HEIGHT,
+    IMG_WIDTH,
+    SAVE_DIR,
+    FACE_DETECTOR_PATH,
+)
 from DataPacker.DataPacker import DataPacker
 from DetectorExceptions.ConnectionExceptions import WrongPortException, validate_port
 

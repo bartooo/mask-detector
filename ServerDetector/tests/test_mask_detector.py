@@ -1,7 +1,12 @@
 import pytest
 
 from ServerDetector.face_mask_detector import FaceMaskDetector
-from ServerDetector.parameters import FACE_DETECTOR_PATH, SAVE_DIR, IMG_HEIGHT, IMG_WIDTH
+from ServerDetector.parameters import (
+    FACE_DETECTOR_PATH,
+    SAVE_DIR,
+    IMG_HEIGHT,
+    IMG_WIDTH,
+)
 import cv2
 
 mask_detector = FaceMaskDetector(

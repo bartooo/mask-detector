@@ -3,6 +3,7 @@ import numpy as np
 import sys
 from DetectorExceptions.DataExceptions import validate_datapacker_params
 
+
 class DataPacker(object):
     def __init__(self, frame: np.ndarray, decision: str, percentage: float):
         """DataPacker construtor.

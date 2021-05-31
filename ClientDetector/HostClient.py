@@ -6,6 +6,7 @@ import sys
 from DetectorExceptions.ConnectionExceptions import WrongPortException, validate_port
 from DataPacker.DataPacker import DataPacker
 
+
 class HostClient:
     """Class represents single host-client, which connects to given server
     and gets from it data.

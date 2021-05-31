@@ -10,7 +10,9 @@ IMG_HEIGHT = 400
 AUTOTUNE = tf.data.AUTOTUNE
 CLASS_NAMES = ["with_mask", "without_mask"]
 EPOCHS = 15
-FACE_DETECTOR_PATH = "./ServerDetector/haar-classifier/haarcascade_frontalface_default.xml"
+FACE_DETECTOR_PATH = (
+    "./ServerDetector/haar-classifier/haarcascade_frontalface_default.xml"
+)
 SCALE_FACTOR = 1.05
 MIN_NEIGHBORS = 13
 MIN_SIZE = (10, 10)
