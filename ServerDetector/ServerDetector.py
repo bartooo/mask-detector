@@ -63,13 +63,15 @@ class ServerDetector:
             while True:
                 # get frame
                 img, frame = vid.read()
+                # get time
+                time_of_read = datetime.now()
                 # resize frame
                 frame_classify = cv2.resize(frame, (IMG_WIDTH, IMG_HEIGHT))
                 # create data to send
                 prediction, percentage, frame = self.detector.predict_img(
                     frame_classify
                 )
-                data_to_send = DataPacker(frame, prediction, percentage)
+                data_to_send = DataPacker(frame, prediction, percentage, time_of_read)
                 # pickle frame, pack and send
                 pickled_to_send = pickle.dumps(data_to_send)
                 message = struct.pack("Q", len(pickled_to_send)) + pickled_to_send

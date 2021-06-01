@@ -5,6 +5,7 @@ import struct
 import sys
 from DetectorExceptions.ConnectionExceptions import WrongPortException, validate_port
 from DataPacker.DataPacker import DataPacker
+import datetime
 
 
 class HostClient:
@@ -60,7 +61,7 @@ class HostClient:
             # show image and if q pressed - stop
             cv2.imshow("RECEIVING VIDEO", data_recv.frame)
             print(
-                f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}%"
+                f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | DELAY: {datetime.datetime.now() - data_recv.time_sended}"
             )
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):

@@ -3,6 +3,7 @@ from DataPacker.DataPacker import DataPacker
 import cv2
 import numpy as np
 import DetectorExceptions.DataExceptions as d_exc
+import datetime
 
 
 def test_getters():
@@ -23,6 +24,7 @@ def test_getters():
         and cv2.countNonZero(g) == 0
         and cv2.countNonZero(r) == 0
     )
+    assert type(dataPacker.time_sended) == datetime.datetime
 
 
 def test_validation():
