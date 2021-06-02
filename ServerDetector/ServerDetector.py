@@ -6,7 +6,7 @@ import pickle
 import struct
 import imutils
 import errno
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any
 import sys
 from ServerDetector.face_mask_detector import FaceMaskDetector
@@ -60,6 +60,7 @@ class ServerDetector:
         try:
             # take camera
             vid = cv2.VideoCapture(0)
+            time_after_send = None
             while True:
                 # get frame
                 img, frame = vid.read()
@@ -71,11 +72,14 @@ class ServerDetector:
                 prediction, percentage, frame = self.detector.predict_img(
                     frame_classify
                 )
-                data_to_send = DataPacker(frame, prediction, percentage, time_of_read)
+                data_to_send = DataPacker(
+                    frame, prediction, percentage, time_after_send
+                )
                 # pickle frame, pack and send
                 pickled_to_send = pickle.dumps(data_to_send)
                 message = struct.pack("Q", len(pickled_to_send)) + pickled_to_send
                 conn.sendall(message)
+                time_after_send = datetime.now() - time_of_read
 
         except socket.error as e:
             # if someone disconnected

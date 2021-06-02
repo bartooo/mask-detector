@@ -47,7 +47,8 @@ class Thread(QThread):
             data_recv = pickle.loads(data_recv_pickled)
             # show image and if q pressed - stop
             print(
-                f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | DELAY: {datetime.datetime.now() - data_recv.time_sended}"
+                # f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | NOW: {datetime.datetime.now()} | SEND: {data_recv.time_sended}"
+                f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | DIFF: {data_recv.time_sended}"
             )
             rgbImage = cv2.cvtColor(data_recv.frame, cv2.COLOR_BGR2RGB)
             h, w, ch = rgbImage.shape
@@ -59,7 +60,8 @@ class Thread(QThread):
             self.changePixmap.emit(p)
             self.changeLabel2Text.emit(f"Prediction: {data_recv.percentage:.3f}%")
             self.changeLabel3Text.emit(
-                f"Delay: {(datetime.datetime.now() - data_recv.time_sended).total_seconds() * 1000:.3f} ms"
+                # f"Delay: {(datetime.datetime.now() - data_recv.time_sended).total_seconds() * 1000:.3f} ms"
+                f"Delay: {data_recv.time_sended} ms"
             )
             self.changeLabel4Text.emit(f"Decision: {data_recv.decision}")
 
@@ -133,5 +135,6 @@ class App(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    # ex = App("ubuntu", 8007)
     ex = App("DESKTOP-HT34P2E", 8006)
     sys.exit(app.exec_())
