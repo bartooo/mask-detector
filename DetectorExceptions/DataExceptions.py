@@ -1,5 +1,6 @@
 from typing import Any
 import numpy as np
+import datetime
 
 MAX_DECISION_LENGTH = 1000
 
@@ -58,7 +59,14 @@ def validate_decision(decision: Any) -> None:
         )
 
 
-def validate_datapacker_params(frame: Any, decision: Any, percentage: Any) -> None:
+def validate_time_send(time_send: Any) -> None:
+    if type(time_send) != datetime.time:
+        raise DataPackerException("Wrong type of time sended!")
+
+
+def validate_datapacker_params(
+    frame: Any, decision: Any, percentage: Any, time_send: Any
+) -> None:
     """Validates DataPacker parameters.
 
     Args:
@@ -69,3 +77,5 @@ def validate_datapacker_params(frame: Any, decision: Any, percentage: Any) -> No
     validate_frame(frame)
     validate_decision(decision)
     validate_percentage(percentage)
+    # if time_send is not None:
+    #     validate_time_send(time_send)

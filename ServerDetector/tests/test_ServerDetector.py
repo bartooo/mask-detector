@@ -1,6 +1,6 @@
 from pytest import raises
-from ServerDetector import ServerDetector
-import ConnectionExceptions as con_exc
+from ServerDetector.ServerDetector import ServerDetector
+import DetectorExceptions.ConnectionExceptions as con_exc
 
 
 def test_port():

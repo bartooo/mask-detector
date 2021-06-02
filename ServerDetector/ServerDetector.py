@@ -6,12 +6,18 @@ import pickle
 import struct
 import imutils
 import errno
-from datetime import datetime
-from DataPacker import DataPacker
-from ConnectionExceptions import WrongPortException, validate_port
+from datetime import date, datetime
 from typing import Any
-from face_mask_detector import FaceMaskDetector
-from parameters import IMG_HEIGHT, IMG_WIDTH, SAVE_DIR, FACE_DETECTOR_PATH
+import sys
+from ServerDetector.face_mask_detector import FaceMaskDetector
+from ServerDetector.parameters import (
+    IMG_HEIGHT,
+    IMG_WIDTH,
+    SAVE_DIR,
+    FACE_DETECTOR_PATH,
+)
+from DataPacker.DataPacker import DataPacker
+from DetectorExceptions.ConnectionExceptions import WrongPortException, validate_port
 
 
 class ServerDetector:
@@ -54,20 +60,26 @@ class ServerDetector:
         try:
             # take camera
             vid = cv2.VideoCapture(0)
+            time_after_send = None
             while True:
                 # get frame
                 img, frame = vid.read()
+                # get time
+                time_of_read = datetime.now()
                 # resize frame
                 frame_classify = cv2.resize(frame, (IMG_WIDTH, IMG_HEIGHT))
                 # create data to send
                 prediction, percentage, frame = self.detector.predict_img(
                     frame_classify
                 )
-                data_to_send = DataPacker(frame, prediction, percentage)
+                data_to_send = DataPacker(
+                    frame, prediction, percentage, time_after_send
+                )
                 # pickle frame, pack and send
                 pickled_to_send = pickle.dumps(data_to_send)
                 message = struct.pack("Q", len(pickled_to_send)) + pickled_to_send
                 conn.sendall(message)
+                time_after_send = datetime.now() - time_of_read
 
         except socket.error as e:
             # if someone disconnected
@@ -99,8 +111,3 @@ class ServerDetector:
                 thread = threading.Thread(target=self.handle_client, args=(conn, addr))
                 thread.start()
                 print(f"[SERVER] ACIVE CONNECTIONS={threading.activeCount() - 1}")
-
-
-if __name__ == "__main__":
-    serverDetector = ServerDetector("0.0.0.0", 8006)
-    serverDetector.listen()

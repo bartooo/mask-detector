@@ -1,6 +1,7 @@
 from pytest import raises
-from HostClient import HostClient
-import ConnectionExceptions as con_exc
+import sys
+from ClientDetector.HostClient import HostClient
+import DetectorExceptions.ConnectionExceptions as con_exc
 
 
 def test_port():

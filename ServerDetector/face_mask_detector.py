@@ -4,9 +4,9 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 import numpy as np
-from dataset import Dataset
+from ServerDetector.dataset import Dataset
 import cv2
-from parameters import (
+from ServerDetector.parameters import (
     IMG_WIDTH,
     IMG_HEIGHT,
     EPOCHS,
