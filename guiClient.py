@@ -92,26 +92,28 @@ class Thread(QThread):
             convertToQtFormat = QImage(
                 rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
             )
-            p = convertToQtFormat.scaled(300, 300, Qt.KeepAspectRatio)
-            self.changePixmap.emit(p)
-            self.changeLabel2Text.emit(f"Prediction: {data_recv.percentage:.3f}%")
+            self.frame = convertToQtFormat.scaled(100, 100, Qt.KeepAspectRatio)
+            self.confidence = f"{data_recv.percentage:.3f}"
+            self.prediction = f"{data_recv.decision}"
+            self.changePixmap.emit(convertToQtFormat.scaled(300, 300, Qt.KeepAspectRatio))
+            self.changeLabel2Text.emit(f"Confidence: {self.confidence}%")
             self.changeLabel3Text.emit(
                 # f"Delay: {(datetime.datetime.now() - data_recv.time_sended).total_seconds() * 1000:.3f} ms"
                 f"Delay: {data_recv.time_sended} ms"
             )
-            self.changeLabel4Text.emit(f"Decision: {data_recv.decision}")
+            self.changeLabel4Text.emit(f"Prediction: {self.prediction}")
             if self.run_seconds == 0:
-                self.send_frame(convertToQtFormat.scaled(100, 100, Qt.KeepAspectRatio), f"{data_recv.percentage:.3f}", f"{data_recv.decision}")
+                self.send_frame()
                 
             elif self.run_seconds == 5:
                 self.timer.cancel()
                 
         self.client_socket.close()
 
-    def send_frame(self, frame, confidence, prediction):
-        self.add_image.emit(frame, confidence, prediction, self.run_seconds)
+    def send_frame(self):
+        self.add_image.emit(self.frame, self.confidence, self.prediction, self.run_seconds)
         self.run_seconds += 1
-        self.timer = threading.Timer(1.0, self.send_frame, [frame, confidence, prediction])
+        self.timer = threading.Timer(1.0, self.send_frame)
         self.timer.start()
 
 class DetectWindow(QDialog):
