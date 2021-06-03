@@ -5,13 +5,13 @@ import pickle
 import struct
 import sys
 import datetime
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QWidget, QLabel, QApplication
+from PyQt5.QtWidgets import QDialog, QHBoxLayout, QMainWindow, QPushButton, QVBoxLayout, QWidget, QLabel, QApplication
 from PyQt5.QtCore import QObject, QThread, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QImage, QPixmap, QFont
 from PyQt5 import uic
 from DetectorExceptions.ConnectionExceptions import WrongPortException, validate_port
 from DataPacker.DataPacker import DataPacker
-
+import time
 
 class Thread(QThread):
     
@@ -23,16 +23,25 @@ class Thread(QThread):
     changeLabel2Text = pyqtSignal(str)
     changeLabel3Text = pyqtSignal(str)
     changeLabel4Text = pyqtSignal(str)
+    addItem = pyqtSignal(QImage)
     server_name = None
     server_port = None
     client_socket = None
 
+    @property
+    def finish(self):
+        return self._finish
 
+    @finish.setter
+    def finish(self, value:bool):
+        self._finish = value
 
     def run(self):
         payload_size = struct.calcsize("Q")
         data = b""
-        while True:
+        total_seconds = 0
+        current_time = time.time()
+        while not self.finish and total_seconds < 5:
             # while loop to get size of receiving data
             while len(data) < payload_size:
                 packet = self.client_socket.recv(4 * 1024)  # 4KB
@@ -65,7 +74,7 @@ class Thread(QThread):
             convertToQtFormat = QImage(
                 rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
             )
-            p = convertToQtFormat.scaled(600, 600, Qt.KeepAspectRatio)
+            p = convertToQtFormat.scaled(300, 300, Qt.KeepAspectRatio)
             self.changePixmap.emit(p)
             self.changeLabel2Text.emit(f"Prediction: {data_recv.percentage:.3f}%")
             self.changeLabel3Text.emit(
@@ -73,12 +82,17 @@ class Thread(QThread):
                 f"Delay: {data_recv.time_sended} ms"
             )
             self.changeLabel4Text.emit(f"Decision: {data_recv.decision}")
+            
+            if round(time.time() - current_time, 1) >= 0.9 and round(time.time() - current_time, 1) <= 1.1:
+                frame = convertToQtFormat.scaled(100, 100, Qt.KeepAspectRatio)
+                self.addItem.emit(frame)
+                total_seconds += 1
+                current_time = time.time()
 
 
-
-class DetectWindow(QWidget):
-    def __init__(self, serv_name: str, serv_port: int):
-        super().__init__()
+class DetectWindow(QDialog):
+    def __init__(self, parent, serv_name: str, serv_port: int):
+        super().__init__(parent=parent)
         self.title = "Hello"
         self.left = 0
         self.width = 0
@@ -87,7 +101,14 @@ class DetectWindow(QWidget):
         validate_port(serv_port)
         self.server_name = serv_name
         self.server_port = serv_port
-        self.initUI()
+        self._initUI()
+
+    @pyqtSlot(QImage)
+    def add_image_to_hbox(self, image):
+        img_label = QLabel()
+        img_label.setPixmap(QPixmap.fromImage(image))
+        img_label.resize(40, 40)
+        self.images_hbox.addWidget(img_label)
 
     @pyqtSlot(QImage)
     def setImage(self, image):
@@ -105,42 +126,59 @@ class DetectWindow(QWidget):
     def setLabel4Text(self, text):
         self.label4.setText(text)
 
-    def initUI(self):
+    def _initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
-        self.resize(600, 740)
-
+        self.resize(900, 600)
+        self._create_labels()
+        self._create_images_hbox()
+        self._create_thread()
+        
+    def _create_labels(self):
         # create a label
         self.label = QLabel(self)
-        self.label.move(0, 0)
+        self.label.move(300, -150)
         self.label.resize(600, 600)
         self.label2 = QLabel(self)
-        self.label2.setFont(QFont("Arial", 20))
-        self.label2.move(0, 650)
+        self.label2.setFont(QFont("Arial", 10))
+        self.label2.move(0, 200)
         self.label2.resize(600, 140)
         self.label2.setText("Prediction: ")
         self.label3 = QLabel(self)
-        self.label3.setFont(QFont("Arial", 20))
-        self.label3.move(0, 600)
+        self.label3.setFont(QFont("Arial", 10))
+        self.label3.move(0, 220)
         self.label3.resize(600, 140)
         self.label3.setText("Latency: ")
         self.label4 = QLabel(self)
-        self.label4.setFont(QFont("Arial", 20))
-        self.label4.move(0, 550)
+        self.label4.setFont(QFont("Arial", 10))
+        self.label4.move(0, 240)
         self.label4.resize(600, 140)
         self.label4.setText("Decision: ")
         
-        th = Thread(self)
-        th.changePixmap.connect(self.setImage)
-        th.changeLabel2Text.connect(self.setLabel2Text)
-        th.changeLabel3Text.connect(self.setLabel3Text)
-        th.changeLabel4Text.connect(self.setLabel4Text)
-        th.server_name = self.server_name
-        th.server_port = self.server_port
-        th.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        th.client_socket.connect((self.server_name, self.server_port))
-        th.start()
+    def _create_thread(self):
+        self.th = Thread(self)
+        self.th.changePixmap.connect(self.setImage)
+        self.th.changeLabel2Text.connect(self.setLabel2Text)
+        self.th.changeLabel3Text.connect(self.setLabel3Text)
+        self.th.changeLabel4Text.connect(self.setLabel4Text)
+        self.th.addItem.connect(self.add_image_to_hbox)
+        self.th.server_name = self.server_name
+        self.th.server_port = self.server_port
+        self.th.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.th.client_socket.connect((self.server_name, self.server_port))
+        self.th.start()
 
+    def closeEvent(self, event):
+        if self.th:
+            self.th.finish = False
+            self.th.terminate()
+            self.destroy()
+            self.parent().show()
+    
+    def _create_images_hbox(self):
+        self.images_hbox = QHBoxLayout(self)
+        self.images_hbox.setContentsMargins(0, 200, 0, 0)
+        
 
 class MainWindow(QMainWindow):
     
@@ -151,19 +189,20 @@ class MainWindow(QMainWindow):
         self.show()
 
     def _initUI(self):
+        self.resize(900, 600)
         start_button = self._make_start_button()
 
     def _make_start_button(self):
         button = QPushButton(self)
         button.setText("Start")
-        button.move(400, 450)
+        button.move(400, 400)
         button.clicked.connect(self._on_start_button_clicked)
         return button
 
     def _on_start_button_clicked(self):
-        self.detect_window = DetectWindow("pc", 8006)
-        self.hide()
+        self.detect_window = DetectWindow(self, "pc", 8006)
         self.detect_window.move(500, 100)
+        self.hide()
         self.detect_window.show()
 
 if __name__ == "__main__":
