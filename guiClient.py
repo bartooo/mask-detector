@@ -22,12 +22,14 @@ from PyQt5 import uic
 from DetectorExceptions.ConnectionExceptions import WrongPortException, validate_port
 from DataPacker.DataPacker import DataPacker
 import time
-
+import threading
 
 class Thread(QThread):
     def __init__(self, parent: typing.Optional[QObject]) -> None:
         super().__init__(parent=parent)
         self._finish = False
+        self._run_seconds = 0
+        self.timer = None
 
     changePixmap = pyqtSignal(QImage)
     changeLabel2Text = pyqtSignal(str)
@@ -37,6 +39,14 @@ class Thread(QThread):
     server_name = None
     server_port = None
     client_socket = None
+    
+    @property
+    def run_seconds(self):
+        return self._run_seconds
+
+    @run_seconds.setter
+    def run_seconds(self, value: bool):
+        self._run_seconds = value
 
     @property
     def finish(self):
@@ -49,9 +59,8 @@ class Thread(QThread):
     def run(self):
         payload_size = struct.calcsize("Q")
         data = b""
-        total_seconds = 1
-        current_time = time.time()
-        while not self.finish and total_seconds <= 5:
+        
+        while not self.finish and self.run_seconds < 5:
             # while loop to get size of receiving data
             while len(data) < payload_size:
                 packet = self.client_socket.recv(4 * 1024)  # 4KB
@@ -60,7 +69,6 @@ class Thread(QThread):
                 data += packet
             # counting size of sending data
             packed_msg_size = data[:payload_size]
-            print(len(packed_msg_size))
             # if in first while loop there was download part of data, need to add it on start
             data = data[payload_size:]
             msg_size = struct.unpack("Q", packed_msg_size)[0]
@@ -92,16 +100,19 @@ class Thread(QThread):
                 f"Delay: {data_recv.time_sended} ms"
             )
             self.changeLabel4Text.emit(f"Decision: {data_recv.decision}")
-
-            if (
-                round(time.time() - current_time, 1) >= 0.9
-                and round(time.time() - current_time, 1) <= 1.1
-            ):
-                self.add_image.emit(convertToQtFormat.scaled(100, 100, Qt.KeepAspectRatio), f"{data_recv.percentage:.3f}", f"{data_recv.decision}", total_seconds)
-                total_seconds += 1
-                current_time = time.time()
-        self.client_socket.close()
+            if self.run_seconds == 0:
+                self.send_frame(convertToQtFormat.scaled(100, 100, Qt.KeepAspectRatio), f"{data_recv.percentage:.3f}", f"{data_recv.decision}")
                 
+            elif self.run_seconds == 5:
+                self.timer.cancel()
+                
+        self.client_socket.close()
+
+    def send_frame(self, frame, confidence, prediction):
+        self.add_image.emit(frame, confidence, prediction, self.run_seconds)
+        self.run_seconds += 1
+        self.timer = threading.Timer(1.0, self.send_frame, [frame, confidence, prediction])
+        self.timer.start()
 
 class DetectWindow(QDialog):
     def __init__(self, parent, serv_name: str, serv_port: int):
