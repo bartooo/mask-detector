@@ -1,17 +1,24 @@
 import socket
+import typing
 import cv2
 import pickle
 import struct
 import sys
 import datetime
-from PyQt5.QtWidgets import QWidget, QLabel, QApplication
-from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QWidget, QLabel, QApplication
+from PyQt5.QtCore import QObject, QThread, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QImage, QPixmap, QFont
+from PyQt5 import uic
 from DetectorExceptions.ConnectionExceptions import WrongPortException, validate_port
 from DataPacker.DataPacker import DataPacker
 
 
 class Thread(QThread):
+    
+    def __init__(self, parent: typing.Optional[QObject]) -> None:
+        super().__init__(parent=parent)
+        self._finish = False
+    
     changePixmap = pyqtSignal(QImage)
     changeLabel2Text = pyqtSignal(str)
     changeLabel3Text = pyqtSignal(str)
@@ -19,6 +26,8 @@ class Thread(QThread):
     server_name = None
     server_port = None
     client_socket = None
+
+
 
     def run(self):
         payload_size = struct.calcsize("Q")
@@ -66,7 +75,8 @@ class Thread(QThread):
             self.changeLabel4Text.emit(f"Decision: {data_recv.decision}")
 
 
-class App(QWidget):
+
+class DetectWindow(QWidget):
     def __init__(self, serv_name: str, serv_port: int):
         super().__init__()
         self.title = "Hello"
@@ -119,7 +129,7 @@ class App(QWidget):
         self.label4.move(0, 550)
         self.label4.resize(600, 140)
         self.label4.setText("Decision: ")
-
+        
         th = Thread(self)
         th.changePixmap.connect(self.setImage)
         th.changeLabel2Text.connect(self.setLabel2Text)
@@ -130,11 +140,37 @@ class App(QWidget):
         th.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         th.client_socket.connect((self.server_name, self.server_port))
         th.start()
+
+
+class MainWindow(QMainWindow):
+    
+    def __init__(self):
+        super(MainWindow, self).__init__()
+        uic.loadUi("./ui/main_window.ui", self)
+        self._initUI()
         self.show()
 
+    def _initUI(self):
+        start_button = self._make_start_button()
+
+    def _make_start_button(self):
+        button = QPushButton(self)
+        button.setText("Start")
+        button.move(400, 450)
+        button.clicked.connect(self._on_start_button_clicked)
+        return button
+
+    def _on_start_button_clicked(self):
+        self.detect_window = DetectWindow("pc", 8006)
+        self.hide()
+        self.detect_window.move(500, 100)
+        self.detect_window.show()
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    
+    app = QApplication([])
+    app.setApplicationName("Poka sowe")
+    window = MainWindow()
     # ex = App("ubuntu", 8007)
-    ex = App("DESKTOP-HT34P2E", 8006)
+    #ex = App("DESKTOP-HT34P2E", 8006)
     sys.exit(app.exec_())
