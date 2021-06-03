@@ -5,7 +5,17 @@ import pickle
 import struct
 import sys
 import datetime
-from PyQt5.QtWidgets import QDialog, QHBoxLayout, QMainWindow, QPushButton, QVBoxLayout, QWidget, QLabel, QApplication
+from PyQt5.QtWidgets import (
+    QDialog,
+    QHBoxLayout,
+    QLayout,
+    QMainWindow,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+    QLabel,
+    QApplication,
+)
 from PyQt5.QtCore import QObject, QThread, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QImage, QPixmap, QFont
 from PyQt5 import uic
@@ -13,17 +23,17 @@ from DetectorExceptions.ConnectionExceptions import WrongPortException, validate
 from DataPacker.DataPacker import DataPacker
 import time
 
+
 class Thread(QThread):
-    
     def __init__(self, parent: typing.Optional[QObject]) -> None:
         super().__init__(parent=parent)
         self._finish = False
-    
+
     changePixmap = pyqtSignal(QImage)
     changeLabel2Text = pyqtSignal(str)
     changeLabel3Text = pyqtSignal(str)
     changeLabel4Text = pyqtSignal(str)
-    addItem = pyqtSignal(QImage)
+    add_image = pyqtSignal(QImage, str, str, int)
     server_name = None
     server_port = None
     client_socket = None
@@ -33,15 +43,15 @@ class Thread(QThread):
         return self._finish
 
     @finish.setter
-    def finish(self, value:bool):
+    def finish(self, value: bool):
         self._finish = value
 
     def run(self):
         payload_size = struct.calcsize("Q")
         data = b""
-        total_seconds = 0
+        total_seconds = 1
         current_time = time.time()
-        while not self.finish and total_seconds < 5:
+        while not self.finish and total_seconds <= 5:
             # while loop to get size of receiving data
             while len(data) < payload_size:
                 packet = self.client_socket.recv(4 * 1024)  # 4KB
@@ -82,13 +92,16 @@ class Thread(QThread):
                 f"Delay: {data_recv.time_sended} ms"
             )
             self.changeLabel4Text.emit(f"Decision: {data_recv.decision}")
-            
-            if round(time.time() - current_time, 1) >= 0.9 and round(time.time() - current_time, 1) <= 1.1:
-                frame = convertToQtFormat.scaled(100, 100, Qt.KeepAspectRatio)
-                self.addItem.emit(frame)
+
+            if (
+                round(time.time() - current_time, 1) >= 0.9
+                and round(time.time() - current_time, 1) <= 1.1
+            ):
+                self.add_image.emit(convertToQtFormat.scaled(100, 100, Qt.KeepAspectRatio), f"{data_recv.percentage:.3f}", f"{data_recv.decision}", total_seconds)
                 total_seconds += 1
                 current_time = time.time()
-
+        self.client_socket.close()
+                
 
 class DetectWindow(QDialog):
     def __init__(self, parent, serv_name: str, serv_port: int):
@@ -101,15 +114,10 @@ class DetectWindow(QDialog):
         validate_port(serv_port)
         self.server_name = serv_name
         self.server_port = serv_port
+        self.images_list = []
         self._initUI()
 
-    @pyqtSlot(QImage)
-    def add_image_to_hbox(self, image):
-        img_label = QLabel()
-        img_label.setPixmap(QPixmap.fromImage(image))
-        img_label.resize(40, 40)
-        self.images_hbox.addWidget(img_label)
-
+    
     @pyqtSlot(QImage)
     def setImage(self, image):
         self.label.setPixmap(QPixmap.fromImage(image))
@@ -125,15 +133,42 @@ class DetectWindow(QDialog):
     @pyqtSlot(str)
     def setLabel4Text(self, text):
         self.label4.setText(text)
+    
+    @pyqtSlot(QImage, str, str, int)
+    def add_image(self, image, prediction, confidence, second):
+        self.images_list.append((image, prediction, confidence, second))
+        self._display_image(self.images_list[len(self.images_list)-1])
+
+    def _display_image(self, image):
+        self.img_label = QLabel(self)
+        x_offset = 100 + ((len(self.images_list) - 1) * 150)
+        self.img_label.move(x_offset, 380)
+        self.img_label.resize(100, 100)
+        self.img_label.setPixmap(QPixmap.fromImage(image[0]))
+        self.pred_label = QLabel(self)
+        self.pred_label.move(x_offset, 420)
+        self.pred_label.resize(150, 150)
+        self.pred_label.setText("Prediction: {}".format(image[1]))
+        self.conf_label = QLabel(self)
+        self.conf_label.move(x_offset, 430)
+        self.conf_label.resize(150, 150)
+        self.conf_label.setText("Confidence: {}".format(image[2]))
+        self.sec_label = QLabel(self)
+        self.sec_label.move(x_offset, 440)
+        self.sec_label.resize(150, 150)
+        self.sec_label.setText("Second: {}".format(str(image[3])))
+        self.img_label.show()
+        self.pred_label.show()
+        self.conf_label.show()
+        self.sec_label.show()
 
     def _initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.resize(900, 600)
         self._create_labels()
-        self._create_images_hbox()
         self._create_thread()
-        
+
     def _create_labels(self):
         # create a label
         self.label = QLabel(self)
@@ -154,6 +189,7 @@ class DetectWindow(QDialog):
         self.label4.move(0, 240)
         self.label4.resize(600, 140)
         self.label4.setText("Decision: ")
+
         
     def _create_thread(self):
         self.th = Thread(self)
@@ -161,12 +197,15 @@ class DetectWindow(QDialog):
         self.th.changeLabel2Text.connect(self.setLabel2Text)
         self.th.changeLabel3Text.connect(self.setLabel3Text)
         self.th.changeLabel4Text.connect(self.setLabel4Text)
-        self.th.addItem.connect(self.add_image_to_hbox)
+        self.th.add_image.connect(self.add_image)
         self.th.server_name = self.server_name
         self.th.server_port = self.server_port
         self.th.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.th.client_socket.connect((self.server_name, self.server_port))
         self.th.start()
+
+    def add_to_images_list(self, image):
+        self.images_list.append(image)
 
     def closeEvent(self, event):
         if self.th:
@@ -174,14 +213,9 @@ class DetectWindow(QDialog):
             self.th.terminate()
             self.destroy()
             self.parent().show()
-    
-    def _create_images_hbox(self):
-        self.images_hbox = QHBoxLayout(self)
-        self.images_hbox.setContentsMargins(0, 200, 0, 0)
-        
+
 
 class MainWindow(QMainWindow):
-    
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi("./ui/main_window.ui", self)
@@ -205,11 +239,11 @@ class MainWindow(QMainWindow):
         self.hide()
         self.detect_window.show()
 
+
 if __name__ == "__main__":
-    
+
     app = QApplication([])
-    app.setApplicationName("Poka sowe")
     window = MainWindow()
     # ex = App("ubuntu", 8007)
-    #ex = App("DESKTOP-HT34P2E", 8006)
+    # ex = App("DESKTOP-HT34P2E", 8006)
     sys.exit(app.exec_())
