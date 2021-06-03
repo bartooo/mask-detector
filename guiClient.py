@@ -31,10 +31,10 @@ class Thread(QThread):
         self._run_seconds = 0
         self.timer = None
 
-    changePixmap = pyqtSignal(QImage)
-    changeLabel2Text = pyqtSignal(str)
-    changeLabel3Text = pyqtSignal(str)
-    changeLabel4Text = pyqtSignal(str)
+    change_pixmap = pyqtSignal(QImage)
+    change_conf_label = pyqtSignal(str)
+    change_delay_label = pyqtSignal(str)
+    change_pred_label = pyqtSignal(str)
     add_image = pyqtSignal(QImage, str, str, int)
     server_name = None
     server_port = None
@@ -95,13 +95,13 @@ class Thread(QThread):
             self.frame = convertToQtFormat.scaled(100, 100, Qt.KeepAspectRatio)
             self.confidence = f"{data_recv.percentage:.3f}"
             self.prediction = f"{data_recv.decision}"
-            self.changePixmap.emit(convertToQtFormat.scaled(300, 300, Qt.KeepAspectRatio))
-            self.changeLabel2Text.emit(f"Confidence: {self.confidence}%")
-            self.changeLabel3Text.emit(
+            self.change_pixmap.emit(convertToQtFormat.scaled(300, 300, Qt.KeepAspectRatio))
+            self.change_conf_label.emit(f"Confidence: {self.confidence}%")
+            self.change_delay_label.emit(
                 # f"Delay: {(datetime.datetime.now() - data_recv.time_sended).total_seconds() * 1000:.3f} ms"
                 f"Delay: {data_recv.time_sended} ms"
             )
-            self.changeLabel4Text.emit(f"Prediction: {self.prediction}")
+            self.change_pred_label.emit(f"Prediction: {self.prediction}")
             if self.run_seconds == 0:
                 self.send_frame()
                 
@@ -132,20 +132,20 @@ class DetectWindow(QDialog):
 
     
     @pyqtSlot(QImage)
-    def setImage(self, image):
-        self.label.setPixmap(QPixmap.fromImage(image))
+    def set_main_image(self, image):
+        self.img_label.setPixmap(QPixmap.fromImage(image))
 
     @pyqtSlot(str)
-    def setLabel2Text(self, text):
-        self.label2.setText(text)
+    def set_conf_label(self, text):
+        self.conf_label.setText(text)
 
     @pyqtSlot(str)
-    def setLabel3Text(self, text):
-        self.label3.setText(text)
+    def set_delay_label(self, text):
+        self.delay_label.setText(text)
 
     @pyqtSlot(str)
-    def setLabel4Text(self, text):
-        self.label4.setText(text)
+    def set_pred_label(self, text):
+        self.pred_label.setText(text)
     
     @pyqtSlot(QImage, str, str, int)
     def add_image(self, image, prediction, confidence, second):
@@ -179,46 +179,39 @@ class DetectWindow(QDialog):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.resize(900, 600)
-        self._create_labels()
+        self._create_main_image()
         self._create_thread()
 
-    def _create_labels(self):
-        # create a label
-        self.label = QLabel(self)
-        self.label.move(300, -150)
-        self.label.resize(600, 600)
-        self.label2 = QLabel(self)
-        self.label2.setFont(QFont("Arial", 10))
-        self.label2.move(0, 200)
-        self.label2.resize(600, 140)
-        self.label2.setText("Prediction: ")
-        self.label3 = QLabel(self)
-        self.label3.setFont(QFont("Arial", 10))
-        self.label3.move(0, 220)
-        self.label3.resize(600, 140)
-        self.label3.setText("Latency: ")
-        self.label4 = QLabel(self)
-        self.label4.setFont(QFont("Arial", 10))
-        self.label4.move(0, 240)
-        self.label4.resize(600, 140)
-        self.label4.setText("Decision: ")
+    def _create_main_image(self):
+        self.img_label = QLabel(self)
+        self.img_label.move(300, -150)
+        self.img_label.resize(600, 600)
+        self.conf_label = QLabel(self)
+        self.conf_label.setFont(QFont("Arial", 10))
+        self.conf_label.move(0, 200)
+        self.conf_label.resize(600, 140)
+        self.delay_label = QLabel(self)
+        self.delay_label.setFont(QFont("Arial", 10))
+        self.delay_label.move(0, 220)
+        self.delay_label.resize(600, 140)
+        self.pred_label = QLabel(self)
+        self.pred_label.setFont(QFont("Arial", 10))
+        self.pred_label.move(0, 240)
+        self.pred_label.resize(600, 140)
 
         
     def _create_thread(self):
         self.th = Thread(self)
-        self.th.changePixmap.connect(self.setImage)
-        self.th.changeLabel2Text.connect(self.setLabel2Text)
-        self.th.changeLabel3Text.connect(self.setLabel3Text)
-        self.th.changeLabel4Text.connect(self.setLabel4Text)
+        self.th.change_pixmap.connect(self.set_main_image)
+        self.th.change_conf_label.connect(self.set_conf_label)
+        self.th.change_delay_label.connect(self.set_delay_label)
+        self.th.change_pred_label.connect(self.set_pred_label)
         self.th.add_image.connect(self.add_image)
         self.th.server_name = self.server_name
         self.th.server_port = self.server_port
         self.th.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.th.client_socket.connect((self.server_name, self.server_port))
         self.th.start()
-
-    def add_to_images_list(self, image):
-        self.images_list.append(image)
 
     def closeEvent(self, event):
         if self.th:
