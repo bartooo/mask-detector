@@ -36,6 +36,7 @@ class Thread(QThread):
     change_delay_label = pyqtSignal(str)
     change_pred_label = pyqtSignal(str)
     add_image = pyqtSignal(QImage, str, str, int)
+    show_result = pyqtSignal()
     server_name = None
     server_port = None
     client_socket = None
@@ -103,18 +104,21 @@ class Thread(QThread):
             )
             self.change_pred_label.emit(f"Prediction: {self.prediction}")
             if self.run_seconds == 0:
-                self.send_frame()
+                self._send_frame()
                 
             elif self.run_seconds == 5:
                 self.timer.cancel()
                 
         self.client_socket.close()
+        self.show_result.emit()
 
-    def send_frame(self):
+
+    def _send_frame(self):
         self.add_image.emit(self.frame, self.confidence, self.prediction, self.run_seconds)
         self.run_seconds += 1
-        self.timer = threading.Timer(1.0, self.send_frame)
+        self.timer = threading.Timer(1.0, self._send_frame)
         self.timer.start()
+        
 
 class DetectWindow(QDialog):
     def __init__(self, parent, serv_name: str, serv_port: int):
@@ -207,6 +211,7 @@ class DetectWindow(QDialog):
         self.th.change_delay_label.connect(self.set_delay_label)
         self.th.change_pred_label.connect(self.set_pred_label)
         self.th.add_image.connect(self.add_image)
+        self.th.show_result.connect(self.show_result)
         self.th.server_name = self.server_name
         self.th.server_port = self.server_port
         self.th.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -220,6 +225,25 @@ class DetectWindow(QDialog):
             self.destroy()
             self.parent().show()
 
+    def show_result(self):
+        final_pred = self._get_final_pred()
+        self.img_label.destroy()
+        self.img_label.clear()
+        self.conf_label.destroy()
+        self.delay_label.destroy()
+        self.pred_label.destroy()
+        self.result_label = QLabel(self)
+        self.result_label.setText(f"Result:{final_pred}")
+        self.result_label.setFont(QFont("Arial", 30))
+        self.result_label.move(300, -150)
+        self.result_label.resize(600, 600)
+        self.result_label.show()
+        
+    def _get_final_pred(self):
+        with_mask_res = sum([img for img in self.images_list if img[1] == "with_mask"])
+        without_mask_res = len(self.images_list) - with_mask_res
+        return "with_mask" if with_mask_res > without_mask_res else "without_mask"
+            
 
 class MainWindow(QMainWindow):
     def __init__(self):
