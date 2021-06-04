@@ -24,12 +24,14 @@ from DataPacker.DataPacker import DataPacker
 import time
 import threading
 from ConfigWindow import ConfigWindow
+import operator
+
 
 class Thread(QThread):
     def __init__(self, parent: typing.Optional[QObject]) -> None:
         super().__init__(parent=parent)
         self._finish = False
-        self._run_seconds = 0
+        self._run_seconds = 1
         self.timer = None
 
     change_pixmap = pyqtSignal(QImage)
@@ -41,7 +43,7 @@ class Thread(QThread):
     server_name = None
     server_port = None
     client_socket = None
-    
+
     @property
     def run_seconds(self):
         return self._run_seconds
@@ -61,8 +63,8 @@ class Thread(QThread):
     def run(self):
         payload_size = struct.calcsize("Q")
         data = b""
-        
-        while not self.finish and self.run_seconds < 5:
+
+        while not self.finish and self.run_seconds < 6:
             # while loop to get size of receiving data
             while len(data) < payload_size:
                 packet = self.client_socket.recv(4 * 1024)  # 4KB
@@ -97,45 +99,46 @@ class Thread(QThread):
             self.frame = convertToQtFormat.scaled(100, 100, Qt.KeepAspectRatio)
             self.confidence = f"{data_recv.percentage:.3f}"
             self.prediction = f"{data_recv.decision}"
-            self.change_pixmap.emit(convertToQtFormat.scaled(300, 300, Qt.KeepAspectRatio))
+            self.change_pixmap.emit(
+                convertToQtFormat.scaled(300, 300, Qt.KeepAspectRatio)
+            )
             self.change_conf_label.emit(f"Confidence: {self.confidence}%")
             self.change_delay_label.emit(
                 # f"Delay: {(datetime.datetime.now() - data_recv.time_sended).total_seconds() * 1000:.3f} ms"
                 f"Delay: {data_recv.time_sended} ms"
             )
             self.change_pred_label.emit(f"Prediction: {self.prediction}")
-            if self.run_seconds == 0:
+            if self.run_seconds == 1:
                 self._send_frame()
-                
-            elif self.run_seconds == 5:
+
+            elif self.run_seconds == 6:
                 self.timer.cancel()
-                
+
         self.client_socket.close()
         self.show_result.emit()
 
-
     def _send_frame(self):
-        self.add_image.emit(self.frame, self.confidence, self.prediction, self.run_seconds)
+        self.add_image.emit(
+            self.frame, self.confidence, self.prediction, self.run_seconds
+        )
         self.run_seconds += 1
         self.timer = threading.Timer(1.0, self._send_frame)
         self.timer.start()
-        
+
 
 class DetectWindow(QDialog):
     def __init__(self, parent, serv_name: str, serv_port: int):
         super().__init__(parent=parent)
-        self.title = "Hello"
-        self.left = 0
-        self.width = 0
-        self.top = 0
-        self.height = 0
         validate_port(serv_port)
         self.server_name = serv_name
         self.server_port = serv_port
         self.images_list = []
+        self.images_labels = []
+        self.images_vboxes = []
         self._initUI()
+        self._create_thread()
+        self.result_label = None
 
-    
     @pyqtSlot(QImage)
     def set_main_image(self, image):
         self.img_label.setPixmap(QPixmap.fromImage(image))
@@ -151,13 +154,14 @@ class DetectWindow(QDialog):
     @pyqtSlot(str)
     def set_pred_label(self, text):
         self.pred_label.setText(text)
-    
+
     @pyqtSlot(QImage, str, str, int)
     def add_image(self, image, prediction, confidence, second):
         self.images_list.append((image, prediction, confidence, second))
-        self._display_image(self.images_list[len(self.images_list)-1])
+        self._display_image(self.images_list[len(self.images_list) - 1])
 
     def _display_image(self, image):
+        vbox = QVBoxLayout()
         img_label = QLabel(self)
         x_offset = 100 + ((len(self.images_list) - 1) * 150)
         img_label.move(x_offset, 380)
@@ -175,17 +179,17 @@ class DetectWindow(QDialog):
         sec_label.move(x_offset, 440)
         sec_label.resize(150, 150)
         sec_label.setText("Second: {}".format(str(image[3])))
+        self._add_to_images_labels_list(img_label, pred_label, conf_label, sec_label)
         img_label.show()
         pred_label.show()
         conf_label.show()
         sec_label.show()
 
     def _initUI(self):
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-        self.resize(900, 600)
+        self.resize(1280, 720)
         self._create_main_image()
-        self._create_thread()
+        self.detect_button = self._create_detect_again_button()
+        
 
     def _create_main_image(self):
         self.img_label = QLabel(self)
@@ -204,7 +208,6 @@ class DetectWindow(QDialog):
         self.pred_label.move(0, 240)
         self.pred_label.resize(600, 140)
 
-        
     def _create_thread(self):
         self.th = Thread(self)
         self.th.change_pixmap.connect(self.set_main_image)
@@ -219,14 +222,44 @@ class DetectWindow(QDialog):
         self.th.client_socket.connect((self.server_name, self.server_port))
         self.th.start()
 
+    def _create_detect_again_button(self):
+        button = QPushButton(self)
+        button.setText("Detect again")
+        button.clicked.connect(self._on_create_detect_again_button_clicked)
+        return button
+
+    def _on_create_detect_again_button_clicked(self):
+        # let user detect again only if previous detection is done
+        if self.result_label:
+            self.images_list.clear()
+            self._clear_images_labels()
+            self._create_thread()
+
+    def _clear_images_labels(self):
+        for label in self.images_labels:
+            label.clear()
+            
+        if self.result_label:
+            self.result_label.clear()
+        
+    def _clear_stats_labels(self):
+        self.img_label.clear()
+        self.pred_label.clear()
+        self.conf_label.clear()
+        self.delay_label.clear()
+        
+    def _add_to_images_labels_list(self, *args):
+        for arg in args:
+            self.images_labels.append(arg)
+
     def closeEvent(self, event):
-        if self.th:
-            self.th.finish = False
-            self.th.terminate()
-            self.destroy()
-            self.parent().show()
+        self._destroy_thread()
+        self.destroy()
+        self.parent().show()
 
     def show_result(self):
+        self._destroy_thread()
+        self._clear_stats_labels()
         final_pred = self._get_final_pred()
         self.img_label.destroy()
         self.img_label.clear()
@@ -239,12 +272,20 @@ class DetectWindow(QDialog):
         self.result_label.move(300, -150)
         self.result_label.resize(600, 600)
         self.result_label.show()
-        
+
+    def _destroy_thread(self):
+        if self.th:
+            self.th.finish = False
+            self.th.terminate()
+            self.th = None
+
     def _get_final_pred(self):
-        with_mask_res = sum([img for img in self.images_list if img[1] == "with_mask"])
-        without_mask_res = len(self.images_list) - with_mask_res
-        return "with_mask" if with_mask_res > without_mask_res else "without_mask"
-            
+        results = {"with_mask": 0, "without_mask": 0, "no face detected": 0}
+        for img in self.images_list:
+            results[img[2]] += 1
+
+        return max(results, key=results.get)
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -254,7 +295,7 @@ class MainWindow(QMainWindow):
         self.show()
 
     def _initUI(self):
-        self.resize(900, 600)
+        self.resize(1280, 720)
         start_button = self._make_start_button()
         config_button = self._make_config_button()
 
@@ -273,8 +314,8 @@ class MainWindow(QMainWindow):
         return button
 
     def _on_start_button_clicked(self):
-        # self.detect_window = DetectWindow(self, "pc", 8006)
-        self.detect_window = DetectWindow(self, "DESKTOP-HT34P2E", 8006)
+        self.detect_window = DetectWindow(self, "pc", 8006)
+        # self.detect_window = DetectWindow(self, "DESKTOP-HT34P2E", 8006)
         self.detect_window.move(500, 100)
         self.hide()
         self.detect_window.show()
