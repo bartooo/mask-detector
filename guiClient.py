@@ -23,6 +23,7 @@ from DetectorExceptions.ConnectionExceptions import WrongPortException, validate
 from DataPacker.DataPacker import DataPacker
 import time
 import threading
+from ConfigWindow import ConfigWindow
 
 class Thread(QThread):
     def __init__(self, parent: typing.Optional[QObject]) -> None:
@@ -255,6 +256,7 @@ class MainWindow(QMainWindow):
     def _initUI(self):
         self.resize(900, 600)
         start_button = self._make_start_button()
+        config_button = self._make_config_button()
 
     def _make_start_button(self):
         button = QPushButton(self)
@@ -263,12 +265,25 @@ class MainWindow(QMainWindow):
         button.clicked.connect(self._on_start_button_clicked)
         return button
 
+    def _make_config_button(self):
+        button = QPushButton(self)
+        button.setText("Config")
+        button.move(400, 500)
+        button.clicked.connect(self._on_config_button_clicked)
+        return button
+
     def _on_start_button_clicked(self):
         # self.detect_window = DetectWindow(self, "pc", 8006)
         self.detect_window = DetectWindow(self, "DESKTOP-HT34P2E", 8006)
         self.detect_window.move(500, 100)
         self.hide()
         self.detect_window.show()
+
+    def _on_config_button_clicked(self):
+        # self.detect_window = DetectWindow(self, "pc", 8006)
+        self.config_window = ConfigWindow(self)
+        self.config_window.move(500, 100)
+        self.config_window.show()
 
 
 if __name__ == "__main__":
