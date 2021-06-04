@@ -264,7 +264,8 @@ class MainWindow(QMainWindow):
         return button
 
     def _on_start_button_clicked(self):
-        self.detect_window = DetectWindow(self, "pc", 8006)
+        # self.detect_window = DetectWindow(self, "pc", 8006)
+        self.detect_window = DetectWindow(self, "DESKTOP-HT34P2E", 8006)
         self.detect_window.move(500, 100)
         self.hide()
         self.detect_window.show()

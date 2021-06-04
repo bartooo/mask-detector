@@ -25,7 +25,7 @@ class ServerDetector:
     image from camera and sends it to connected host
     """
 
-    def __init__(self, serv_addr: str, serv_port: int):
+    def __init__(self, serv_addr: str, serv_port: int, camera: Any = None):
         """ServerDetector constructor.
 
         Args:
@@ -48,6 +48,11 @@ class ServerDetector:
             face_detector_path=FACE_DETECTOR_PATH,
             model_path=SAVE_DIR,
         )
+        if camera is None:
+            self.camera = cv2.VideoCapture(0)
+            _ = self.camera.read()
+        else:
+            self.camera = camera
 
     def handle_client(self, conn: socket, addr: Any) -> None:
         """Function handles connected client by sending him image from camera.
@@ -58,12 +63,10 @@ class ServerDetector:
         """
         print(f"[SERVER] {addr} connected.")
         try:
-            # take camera
-            vid = cv2.VideoCapture(0)
             time_after_send = None
             while True:
                 # get frame
-                img, frame = vid.read()
+                img, frame = self.camera.read()
                 # get time
                 time_of_read = datetime.now()
                 # resize frame
