@@ -23,14 +23,14 @@ class MainWindow(QMainWindow):
     def _make_start_button(self):
         button = QPushButton(self)
         button.setText("Start")
-        button.move(400, 400)
+        button.move(int(self.width()//2 - button.width()//2), 400)
         button.clicked.connect(self._on_start_button_clicked)
         return button
 
     def _make_config_button(self):
         button = QPushButton(self)
         button.setText("Config")
-        button.move(400, 500)
+        button.move(int(self.width()//2 - button.width()//2), 500)
         button.clicked.connect(self._on_config_button_clicked)
         return button
 

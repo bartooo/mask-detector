@@ -81,7 +81,7 @@ class Thread(QThread):
             self.confidence = f"{data_recv.percentage:.3f}"
             self.prediction = f"{data_recv.decision}"
             self.change_pixmap.emit(
-                convertToQtFormat.scaled(300, 300, Qt.KeepAspectRatio)
+                convertToQtFormat.scaled(350, 350, Qt.KeepAspectRatio)
             )
             self.change_conf_label.emit(f"Confidence: {self.confidence}%")
             self.change_delay_label.emit(

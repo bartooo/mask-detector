@@ -1,3 +1,4 @@
+from PyQt5 import QtWidgets
 from Thread import Thread
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QFont, QImage, QPixmap
@@ -17,6 +18,7 @@ class DetectWindow(QDialog):
         self._initUI()
         self._create_thread()
         self.result_label = None
+        self.during_detection = True
 
     @pyqtSlot(QImage)
     def set_main_image(self, image):
@@ -41,23 +43,30 @@ class DetectWindow(QDialog):
 
     def _display_image(self, image):
         img_label = QLabel(self)
-        x_offset = 100 + ((len(self.images_list) - 1) * 150)
-        img_label.move(x_offset, 380)
-        img_label.resize(100, 100)
+        x_offset = 180 + ((len(self.images_list) - 1) * 200)
+        img_label.resize(QPixmap.fromImage(image[0]).width()+5,QPixmap.fromImage(image[0]).height()+7)
         img_label.setPixmap(QPixmap.fromImage(image[0]))
+        img_label.move(x_offset, 420)
+        img_label.setStyleSheet("background-color:#dbac3b")
         pred_label = QLabel(self)
-        pred_label.move(x_offset, 420)
-        pred_label.resize(150, 150)
-        pred_label.setText("Prediction: {}".format(image[1]))
+        pred_label.setText("Prediction: {}".format(image[2]))
+        pred_label.setFont(QFont("Calibri Light", 10))
+        pred_label.move(x_offset, 520)
+        pred_label.resize(200, 10)
         conf_label = QLabel(self)
-        conf_label.move(x_offset, 430)
-        conf_label.resize(150, 150)
-        conf_label.setText("Confidence: {}".format(image[2]))
+        conf_label.setFont(QFont("Calibri Light", 10))
+        conf_label.move(x_offset, 530)
+        conf_label.resize(150, 10)
+        conf_label.setText("Confidence: {}%".format(image[1]))
         sec_label = QLabel(self)
-        sec_label.move(x_offset, 440)
-        sec_label.resize(150, 150)
+        sec_label.setFont(QFont("Calibri Light", 10))
+        sec_label.move(x_offset, 540)
+        sec_label.resize(150, 10)
         sec_label.setText("Second: {}".format(str(image[3])))
         self._add_to_images_labels_list(img_label, pred_label, conf_label, sec_label)
+        pred_label.setStyleSheet("color: white")
+        conf_label.setStyleSheet("color: white")
+        sec_label.setStyleSheet("color: white")
         img_label.show()
         pred_label.show()
         conf_label.show()
@@ -67,24 +76,28 @@ class DetectWindow(QDialog):
         self.resize(1280, 720)
         self._create_main_image()
         self.detect_button = self._create_detect_again_button()
-        
+        self.back_button = self._create_back_button()
+        self.setStyleSheet("background-color : #2f2e2e")     
 
     def _create_main_image(self):
         self.img_label = QLabel(self)
-        self.img_label.move(300, -150)
-        self.img_label.resize(600, 600)
+        self.img_label.resize(355, 355)
+        self.img_label.move(self.width()/2 - 200, 5)
         self.conf_label = QLabel(self)
-        self.conf_label.setFont(QFont("Arial", 10))
+        self.conf_label.setFont(QFont("Calibri Light", 10))
+        self.conf_label.setStyleSheet("color: white")
         self.conf_label.move(0, 200)
-        self.conf_label.resize(600, 140)
+        self.conf_label.resize(200, 20)
         self.delay_label = QLabel(self)
-        self.delay_label.setFont(QFont("Arial", 10))
+        self.delay_label.setFont(QFont("Calibri Light", 10))
+        self.delay_label.setStyleSheet("color: white")
         self.delay_label.move(0, 220)
-        self.delay_label.resize(600, 140)
+        self.delay_label.resize(300, 20)
         self.pred_label = QLabel(self)
-        self.pred_label.setFont(QFont("Arial", 10))
+        self.pred_label.setFont(QFont("Calibri Light", 10))
+        self.pred_label.setStyleSheet("color: white")
         self.pred_label.move(0, 240)
-        self.pred_label.resize(600, 140)
+        self.pred_label.resize(300, 20)
 
     def _create_thread(self):
         self.th = Thread(self)
@@ -103,22 +116,41 @@ class DetectWindow(QDialog):
     def _create_detect_again_button(self):
         button = QPushButton(self)
         button.setText("Detect again")
-        button.clicked.connect(self._on_create_detect_again_button_clicked)
+        button.setStyleSheet("QPushButton {background-color:#dbac3b; color:white}")
+        button.move(5, 20)
+        button.clicked.connect(self._on_detect_again_button_clicked)
         return button
 
-    def _on_create_detect_again_button_clicked(self):
+    def _on_detect_again_button_clicked(self):
         # let user detect again only if previous detection is done
-        if self.result_label:
+        if not self.during_detection:
+            self.during_detection = True
             self.images_list.clear()
             self._clear_images_labels()
             self._create_thread()
 
+    def _create_back_button(self):
+        button = QPushButton(self)
+        button.setText("Back")
+        button.setStyleSheet("QPushButton {background-color:#dbac3b; color:white}")
+        button.move(1200, 20)
+        button.clicked.connect(self._on_back_button_clicked)
+        return button
+
+    def _on_back_button_clicked(self):
+        if not self.during_detection:
+            self._destroy_thread()
+            self.parent().show()
+            self.destroy()
+
     def _clear_images_labels(self):
         for label in self.images_labels:
             label.clear()
+            label.hide()
             
         if self.result_label:
             self.result_label.clear()
+            self.result_label.hide()
         
     def _clear_stats_labels(self):
         self.img_label.clear()
@@ -136,6 +168,7 @@ class DetectWindow(QDialog):
         self.parent().show()
 
     def show_result(self):
+        self.during_detection = False
         self._destroy_thread()
         self._clear_stats_labels()
         final_pred = self._get_final_pred()
@@ -145,10 +178,11 @@ class DetectWindow(QDialog):
         self.delay_label.destroy()
         self.pred_label.destroy()
         self.result_label = QLabel(self)
+        self.result_label.setStyleSheet("color: white")
         self.result_label.setText(f"Result:{final_pred}")
-        self.result_label.setFont(QFont("Arial", 30))
-        self.result_label.move(300, -150)
-        self.result_label.resize(600, 600)
+        self.result_label.setFont(QFont("Calibri Light", 30))
+        self.result_label.resize(400, 50)
+        self.result_label.move(int(self.width()//2 - 200), 150)
         self.result_label.show()
 
     def _destroy_thread(self):
