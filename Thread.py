@@ -78,7 +78,7 @@ class Thread(QThread):
             convertToQtFormat = QImage(
                 rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
             )
-            self.frame = convertToQtFormat.scaled(100, 100, Qt.KeepAspectRatio)
+            self.frame = convertToQtFormat.scaled(150, 150, Qt.KeepAspectRatio)
             self.confidence = f"{data_recv.percentage:.3f}"
             self.prediction = f"{data_recv.decision}"
             self.change_pixmap.emit(
