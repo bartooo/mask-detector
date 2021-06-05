@@ -6,12 +6,13 @@ from DetectorExceptions.ConnectionExceptions import validate_port
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton
 import socket
 
+
 class DetectWindow(QDialog):
-    def __init__(self, parent, serv_name: str, serv_port: int):
+    def __init__(self, parent):
         super().__init__(parent=parent)
-        validate_port(serv_port)
-        self.server_name = serv_name
-        self.server_port = serv_port
+        validate_port(parent.server_port)
+        self.server_name = parent.server_name
+        self.server_port = parent.server_port
         self.images_list = []
         self.images_labels = []
         self.images_vboxes = []
@@ -44,7 +45,10 @@ class DetectWindow(QDialog):
     def _display_image(self, image):
         img_label = QLabel(self)
         x_offset = 180 + ((len(self.images_list) - 1) * 200)
-        img_label.resize(QPixmap.fromImage(image[0]).width()+5,QPixmap.fromImage(image[0]).height()+7)
+        img_label.resize(
+            QPixmap.fromImage(image[0]).width() + 5,
+            QPixmap.fromImage(image[0]).height() + 7,
+        )
         img_label.setPixmap(QPixmap.fromImage(image[0]))
         img_label.move(x_offset, 420)
         img_label.setStyleSheet("background-color:#dbac3b")
@@ -77,12 +81,12 @@ class DetectWindow(QDialog):
         self._create_main_image()
         self.detect_button = self._create_detect_again_button()
         self.back_button = self._create_back_button()
-        self.setStyleSheet("background-color : #2f2e2e")     
+        self.setStyleSheet("background-color : #2f2e2e")
 
     def _create_main_image(self):
         self.img_label = QLabel(self)
         self.img_label.resize(355, 355)
-        self.img_label.move(self.width()/2 - 200, 5)
+        self.img_label.move(self.width() / 2 - 200, 5)
         self.conf_label = QLabel(self)
         self.conf_label.setFont(QFont("Calibri Light", 10))
         self.conf_label.setStyleSheet("color: white")
@@ -107,11 +111,16 @@ class DetectWindow(QDialog):
         self.th.change_pred_label.connect(self.set_pred_label)
         self.th.add_image.connect(self.add_image)
         self.th.show_result.connect(self.show_result)
+        self._update_server_info()
         self.th.server_name = self.server_name
         self.th.server_port = self.server_port
         self.th.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.th.client_socket.connect((self.server_name, self.server_port))
         self.th.start()
+
+    def _update_server_info(self):
+        self.server_name = self.parent().server_name
+        self.server_port = self.parent().server_port
 
     def _create_detect_again_button(self):
         button = QPushButton(self)
@@ -147,17 +156,17 @@ class DetectWindow(QDialog):
         for label in self.images_labels:
             label.clear()
             label.hide()
-            
+
         if self.result_label:
             self.result_label.clear()
             self.result_label.hide()
-        
+
     def _clear_stats_labels(self):
         self.img_label.clear()
         self.pred_label.clear()
         self.conf_label.clear()
         self.delay_label.clear()
-        
+
     def _add_to_images_labels_list(self, *args):
         for arg in args:
             self.images_labels.append(arg)
@@ -182,7 +191,7 @@ class DetectWindow(QDialog):
         self.result_label.setText(f"Result:{final_pred}")
         self.result_label.setFont(QFont("Calibri Light", 30))
         self.result_label.resize(400, 50)
-        self.result_label.move(int(self.width()//2 - 200), 150)
+        self.result_label.move(int(self.width() // 2 - 200), 150)
         self.result_label.show()
 
     def _destroy_thread(self):

@@ -8,6 +8,7 @@ import cv2
 from PyQt5.QtCore import Qt
 import threading
 
+
 class Thread(QThread):
     def __init__(self, parent: typing.Optional[QObject]) -> None:
         super().__init__(parent=parent)

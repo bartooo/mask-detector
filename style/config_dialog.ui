@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConfigureDialog</class>
+ <widget class="QDialog" name="ConfigureDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>626</width>
+    <height>486</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog{
+    color: #cfab2d;
+    background-color: #2a292e;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+}
+</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <item>
+    <layout class="QVBoxLayout" name="vert_center_layout">
+     <item>
+      <layout class="QVBoxLayout" name="vert_layout">
+       <item>
+        <widget class="QLabel" name="setting_label">
+         <property name="styleSheet">
+          <string notr="true">QLabel{
+    color: #cfab2d;
+    text-align: center;
+	margin: 0 auto;
+    font-weight: bold;
+	font-size: 20px;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}</string>
+         </property>
+         <property name="text">
+          <string>SETTINGS</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="buttons_photo_hor_layout">
+         <item>
+          <layout class="QVBoxLayout" name="buttons_vert_layout">
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>2</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="test_connection_button">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{
+    color: #cfab2d;
+    background-color: #2a292e;
+    text-align: center;
+    max-width: 33em;
+    width: 12em;
+    font-size: 16px;
+    height: 3em;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+}
+
+QPushButton:hover{
+    color:#2a292e;
+    background-color: #cfab2d;
+}</string>
+             </property>
+             <property name="text">
+              <string>TEST CONNECTION</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="vert_spacer_tc_del">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>25</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="latency_info_label">
+             <property name="styleSheet">
+              <string notr="true">QLabel{
+    color: #cfab2d;
+    max-width: 33em;
+    font-size: 11px;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}</string>
+             </property>
+             <property name="text">
+              <string>DELAY:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="latency_out_label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">*{
+    color: #cfab2d;
+    background-color: #2a292e;
+    text-align: center;
+    max-width: 33em;
+    width: 12em;
+    font-size: 16px;
+    height: 3em;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+	min-height: 1em;
+}</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="vert_spacer_del_ch">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>38</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="ch_serv_info_label">
+             <property name="styleSheet">
+              <string notr="true">QLabel{
+    color: #cfab2d;
+    max-width: 33em;
+    font-size: 11px;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}</string>
+             </property>
+             <property name="text">
+              <string>CHOOSE SERVER:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="server_box">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QComboBox:editable {
+    color: #cfab2d;
+    background-color: #2a292e;
+    font-weight: bold;
+    max-width: 33em;
+    width: 16em;
+    font-family: sans-serif;
+	font-size: 12px;
+    min-width: 12em;
+    letter-spacing: 0.1em;
+    opacity: 100;
+	letter-spacing: 0.1em;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+	min-height: 3em;
+}
+QComboBox QAbstractItemView{
+	border: 2px;
+	color:#cfab2d;
+	background-color: transparent;
+}
+QComboBox QAbstractItemView:hover{
+	color:#ffffff;
+	background-color: transparent;
+}</string>
+             </property>
+             <property name="editable">
+              <bool>true</bool>
+             </property>
+             <property name="currentText">
+              <string>ubuntu</string>
+             </property>
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <property name="maxVisibleItems">
+              <number>5</number>
+             </property>
+             <property name="placeholderText">
+              <string/>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <item>
+              <property name="text">
+               <string>ubuntu</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>DESKTOP-HT34P2E</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>pc</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>2</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QLabel" name="photo_label">
+           <property name="minimumSize">
+            <size>
+             <width>355</width>
+             <height>355</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>355</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel{
+border: 3px solid #cfab2d;
+border-radius: 13px;
+color: #cfab2d;
+text-align: center;
+font-weight: bold;
+font-size: 30px;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="ch_canc_hor_layout">
+         <item>
+          <widget class="QPushButton" name="change_server_button">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton{
+    color: #cfab2d;
+    background-color: #2a292e;
+    text-align: center;
+    max-width: 33em;
+    width: 12em;
+    font-size: 16px;
+    height: 3em;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+}
+
+QPushButton:hover{
+    color:#2a292e;
+    background-color: #cfab2d;
+}</string>
+           </property>
+           <property name="text">
+            <string>CHANGE SERVER</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="exit_button">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton{
+    color: #cfab2d;
+    background-color: #2a292e;
+    text-align: center;
+    max-width: 33em;
+    width: 12em;
+    font-size: 16px;
+    height: 3em;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+}
+
+QPushButton:hover{
+    color:#2a292e;
+    background-color: #cfab2d;
+}</string>
+           </property>
+           <property name="text">
+            <string>EXIT</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
