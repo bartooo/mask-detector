@@ -90,7 +90,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
 
     def _on_detect_again_button_clicked(self):
         # let user detect again only if previous detection is done
-        if not self.during_detection:
+        if self.th is None or self.th.isFinished():
             self.during_detection = True
             self.images_list.clear()
             self._clear_images_labels()
@@ -99,7 +99,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             self._create_thread()
 
     def _on_back_button_clicked(self):
-        if not self.during_detection:
+        if not self.th.isRunning():
             self._destroy_thread()
             self.parent().show()
             self.destroy()
@@ -129,7 +129,6 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.parent().show()
 
     def show_result(self):
-        self.during_detection = False
         self._destroy_thread()
         self._clear_stats_labels()
         final_pred = self._get_final_pred()
@@ -151,11 +150,13 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.result_label.resize(400, 50)
         self.result_label.move(900, 150)
         self.result_label.show()
+        self._destroy_thread()
+        self.during_detection = False
 
     def _destroy_thread(self):
         if self.th:
-            self.th.finish = False
-            self.th.terminate()
+            self.th.finish = True
+            self.th.quit()
             self.th = None
 
     def _get_final_pred(self):
