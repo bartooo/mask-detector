@@ -149,10 +149,10 @@ class FaceMaskDetector:
             self._draw_info_on_image_with_face(img_haar, x, y, w, h, predicted_class)
 
         if len(rects) == 0:
-            predicted_class = "no face"
+            predicted_class = "NO FACE"
             self._draw_info_on_image_without_face(predicted_class, img_haar)
         elif len(rects) > 1:
-            predicted_class = "multiple faces"
+            predicted_class = "MULTIPLE FACES"
             self._draw_info_on_image_without_face(predicted_class, img_haar)
         return (
             predicted_class,

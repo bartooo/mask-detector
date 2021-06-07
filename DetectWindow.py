@@ -181,7 +181,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             self.th = None
 
     def _get_final_pred(self):
-        results = {"with_mask": 0, "without_mask": 0, "no_face": 0, "multiple_faces":0}
+        results = {"with_mask": 0, "without_mask": 0, "NO FACE": 0, "MULTIPLE FACES":0}
         for img in self.images_list:
             results[img[2]] += 1
         
