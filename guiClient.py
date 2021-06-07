@@ -1,6 +1,7 @@
 from DetectWindow import DetectWindow
 import sys
 from PyQt5.QtWidgets import (
+    QDialog,
     QMainWindow,
     QPushButton,
     QApplication,
@@ -10,11 +11,11 @@ from ConfWindow import ConfWindow
 from backports import configparser
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QDialog):
     def __init__(self):
-        super(MainWindow, self).__init__()
+        super().__init__()
+        super(QDialog, self).__init__()
         self.config_path = "ClientDetector/config.ini"
-        uic.loadUi("./style/main_window.ui", self)
         self.load_config()
         self._initUI()
         self.show()

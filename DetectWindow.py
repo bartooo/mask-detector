@@ -58,16 +58,16 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.main_image_label.setPixmap(QPixmap.fromImage(image))
 
     @pyqtSlot(str)
-    def set_conf_label(self, text):
-        self.conf_label.setText(text)
+    def set_conf_label(self, conf):
+        self.conf_label.setText(f"Confidence: {conf}")
 
     @pyqtSlot(str)
-    def set_delay_label(self, text):
-        self.delay_label.setText(text)
+    def set_delay_label(self, delay):
+        self.delay_label.setText(f"Delay: {delay}")
 
     @pyqtSlot(str)
-    def set_pred_label(self, text):
-        self.pred_label.setText(text)
+    def set_pred_label(self, pred):
+        self.pred_label.setText("Prediction: {}".format(pred.replace("_", " ")))
 
     @pyqtSlot(QImage, str, str, int)
     def add_image(self, image, prediction, confidence, second):
@@ -93,7 +93,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             "Confidence: {}%".format(self.images_list[second - 1][1])
         )
         self.images_labels_dict[second]["pred"].setText(
-            "Prediction: {}".format(self.images_list[second - 1][2])
+            "Prediction: {}".format(self.images_list[second - 1][2].replace("_", " "))
         )
         self.images_labels_dict[second]["sec"].setText(
             "Second: {}".format(str(self.images_list[second - 1][3]))
@@ -181,11 +181,11 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             self.th = None
 
     def _get_final_pred(self):
-        results = {"with_mask": 0, "without_mask": 0, "no face detected": 0}
+        results = {"with_mask": 0, "without_mask": 0, "no_face": 0, "multiple_faces":0}
         for img in self.images_list:
             results[img[2]] += 1
-
-        return max(results, key=results.get)
+        
+        return max(results, key=results.get).replace("_", " ")
     
     def show_stats_labels(self):
         self.main_image_label.setStyleSheet(

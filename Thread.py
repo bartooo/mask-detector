@@ -84,12 +84,10 @@ class Thread(QThread):
                 self.change_pixmap.emit(
                     convertToQtFormat.scaled(350, 350, Qt.KeepAspectRatio)
                 )
-                self.change_conf_label.emit(f"Confidence: {self.confidence}%")
-                self.change_delay_label.emit(
-                    # f"Delay: {(datetime.datetime.now() - data_recv.time_sended).total_seconds() * 1000:.3f} ms"
-                    f"Delay: {data_recv.time_sended} ms"
-                )
-                self.change_pred_label.emit(f"Prediction: {self.prediction}")
+                self.change_conf_label.emit(self.confidence)
+                self.change_delay_label.emit(str(data_recv.time_sended
+                ))
+                self.change_pred_label.emit(self.prediction)
                 if self.run_seconds == 1:
                     self._send_frame()
 

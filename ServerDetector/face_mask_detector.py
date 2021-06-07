@@ -102,34 +102,38 @@ class FaceMaskDetector:
         )
         return rects
 
-    def _draw_info_on_image(self, img_haar, x, y, w, h, predicted_class, confidence):
+    def _draw_info_on_image_with_face(self, img_haar, x, y, w, h, predicted_class):
         # draw the face bounding box on the image
-        cv2.rectangle(img_haar, (x, y), (x + w, y + h), COLOR_DICT[predicted_class], 2)
-        cv2.rectangle(
-            img_haar, (x, y - 40), (x + w, y), COLOR_DICT[predicted_class], -1
-        )
-        # draw the text info
+        cv2.rectangle(img_haar, (x, y), (x + w, y + h), COLOR_DICT[predicted_class], 3)
+
+    def _draw_info_on_image_without_face(self, predicted_class, img_haar):
+        textsize = cv2.getTextSize(predicted_class, cv2.FONT_HERSHEY_DUPLEX, 2, 1)[
+            0
+        ]
         cv2.putText(
             img_haar,
-            f"{predicted_class} {confidence:.2f}%",
-            (x, y - 10),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.8,
-            (255, 255, 255),
-            2,
+            predicted_class,
+            (
+                (img_haar.shape[1] - (textsize[0] // 2)) // 2,
+                (img_haar.shape[0] + (textsize[1] // 2)) // 2,
+            ),
+            cv2.FONT_HERSHEY_DUPLEX,
+            1,
+            (0, 0, 0),
+            3,
         )
 
     def predict_img(self, img_array: np.array):
         """
         Predicts to which class belongs given image array.
 
-        Predicted class - either 'with_mask' or 'without_mask' string if face was detected, 'no face detected' otherwise.
+        Predicted class - either 'with_mask' or 'without_mask' string if face was detected, 'no_face_detected' otherwise.
         Confidence - percentage of model's confidence of classification.
         """
         # detect faces in image
         rects = self._detect_faces(img_array)
         predicted_class = ""
-        confidence = 0.0
+        confidence = 100.0
         img_haar = cv2.cvtColor(img_array, cv2.COLOR_BGR2RGB)
         # loop over the bounding boxes
         for (x, y, w, h) in rects:
@@ -142,26 +146,14 @@ class FaceMaskDetector:
             score = tf.nn.softmax(predictions[0])
             predicted_class = CLASS_NAMES[np.argmax(score)]
             confidence = 100 * np.max(score)
-            self._draw_info_on_image(img_haar, x, y, w, h, predicted_class, confidence)
+            self._draw_info_on_image_with_face(img_haar, x, y, w, h, predicted_class)
 
         if len(rects) == 0:
-            predicted_class = "no face detected"
-            # no faces detected
-            textsize = cv2.getTextSize(predicted_class, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[
-                0
-            ]
-            cv2.putText(
-                img_haar,
-                f"{predicted_class}",
-                (
-                    (img_haar.shape[1] - textsize[0]) // 2,
-                    (img_haar.shape[0] + textsize[1]) // 2,
-                ),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1,
-                (0, 0, 0),
-                3,
-            )
+            predicted_class = "no face"
+            self._draw_info_on_image_without_face(predicted_class, img_haar)
+        elif len(rects) > 1:
+            predicted_class = "multiple faces"
+            self._draw_info_on_image_without_face(predicted_class, img_haar)
         return (
             predicted_class,
             float(confidence),
