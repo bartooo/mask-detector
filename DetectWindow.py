@@ -1,7 +1,7 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtCore, QtWidgets
 from Thread import Thread
-from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtGui import QFont, QImage, QPixmap
+from PyQt5.QtCore import pyqtSlot, Qt
+from PyQt5.QtGui import QCursor, QFont, QImage, QPixmap
 from DetectorExceptions.ConnectionExceptions import validate_port
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton
 import socket
@@ -12,6 +12,40 @@ class DetectWindow(QDialog, Ui_DetectDialog):
     def __init__(self, parent):
         super().__init__(parent=parent)
         self.setupUi(self)
+        self._setup_dict()
+        self._connect_buttons()
+        self._setup_cursors()
+        validate_port(parent.server_port)
+        self.server_name = parent.server_name
+        self.server_port = parent.server_port
+        self.images_list = []
+        self._hide_image_labels()
+        self.show_stats_labels()
+        self._create_thread()
+        
+
+    @pyqtSlot(QImage)
+    def set_main_image(self, image):
+        self.main_image_label.setPixmap(QPixmap.fromImage(image))
+
+    @pyqtSlot(str)
+    def set_conf_label(self, text):
+        self.conf_label.setText(text)
+
+    @pyqtSlot(str)
+    def set_delay_label(self, text):
+        self.delay_label.setText(text)
+
+    @pyqtSlot(str)
+    def set_pred_label(self, text):
+        self.pred_label.setText(text)
+
+    @pyqtSlot(QImage, str, str, int)
+    def add_image(self, image, prediction, confidence, second):
+        self.images_list.append((image, prediction, confidence, second))
+        self._display_image_of_second(second)
+
+    def _setup_dict(self):
         self.images_labels_dict = {
             1: {
                 "image": self.image_label_1,
@@ -44,48 +78,30 @@ class DetectWindow(QDialog, Ui_DetectDialog):
                 "sec": self.sec_label_5,
             },
         }
-        self._connect_buttons()
-        validate_port(parent.server_port)
-        self.server_name = parent.server_name
-        self.server_port = parent.server_port
-        self.images_list = []
-        self._hide_image_labels()
-        self._create_thread()
-        
 
-    @pyqtSlot(QImage)
-    def set_main_image(self, image):
-        self.main_image_label.setPixmap(QPixmap.fromImage(image))
-
-    @pyqtSlot(str)
-    def set_conf_label(self, conf):
-        self.conf_label.setText(f"Confidence: {conf}")
-
-    @pyqtSlot(str)
-    def set_delay_label(self, delay):
-        self.delay_label.setText(f"Delay: {delay}")
-
-    @pyqtSlot(str)
-    def set_pred_label(self, pred):
-        self.pred_label.setText("Prediction: {}".format(pred.replace("_", " ")))
-
-    @pyqtSlot(QImage, str, str, int)
-    def add_image(self, image, prediction, confidence, second):
-        self.images_list.append((image, prediction, confidence, second))
-        self._display_image_of_second(second)
+    def _setup_cursors(self):
+        self.back_button.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
+        self.detect_again_button.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
 
     def _hide_image_labels(self):
         for sec in range(1, 6):
             for i in {"image", "pred", "conf", "sec"}:
-                self.images_labels_dict[sec][i].setStyleSheet(
-                    "QLabel {\n" "border: 0px solid gold;\n" "}"
-                )
+                self.images_labels_dict[sec][i].setProperty("is_hidden", "true")
+                self.images_labels_dict[sec][i].style().unpolish(self.images_labels_dict[sec][i])
+                self.images_labels_dict[sec][i].style().polish(self.images_labels_dict[sec][i])
+                self.images_labels_dict[sec][i].update()
 
     def _connect_buttons(self):
         self.back_button.clicked.connect(self._on_back_button_clicked)
         self.detect_again_button.clicked.connect(self._on_detect_again_button_clicked)
 
     def _display_image_of_second(self, second):
+        for label_type in {"image", "pred", "conf", "sec"}:
+            self.images_labels_dict[second][label_type].setProperty("is_hidden", "false")
+            self.images_labels_dict[second][label_type].style().unpolish(self.images_labels_dict[second][label_type])
+            self.images_labels_dict[second][label_type].style().polish(self.images_labels_dict[second][label_type])
+            self.images_labels_dict[second][label_type].update()
+        
         self.images_labels_dict[second]["image"].setPixmap(
             QPixmap.fromImage(self.images_list[second - 1][0])
         )
@@ -98,7 +114,6 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.images_labels_dict[second]["sec"].setText(
             "Second: {}".format(str(self.images_list[second - 1][3]))
         )
-        self.set_style_image_labels(second)
 
     def _create_thread(self):
         self.th = Thread(self)
@@ -120,7 +135,6 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.server_port = self.parent().server_port
 
     def _on_detect_again_button_clicked(self):
-        # let user detect again only if previous thread is finished
         if self._is_thread_finished():
             self.images_list.clear()
             self._clear_images_labels()
@@ -144,13 +158,25 @@ class DetectWindow(QDialog, Ui_DetectDialog):
 
     def _clear_stats_labels(self):
         self.main_image_label.clear()
-        self.main_image_label.setStyleSheet("QLabel{\n" "border: 0px solid gold;\n" "}")
+        self.main_image_label.setProperty("is_hidden", "true")
+        self.main_image_label.style().unpolish(self.main_image_label)
+        self.main_image_label.style().polish(self.main_image_label)
+        self.main_image_label.update()
         self.pred_label.clear()
-        self.pred_label.setStyleSheet("QLabel {\n" "border: 0px solid gold;\n" "}")
+        self.pred_label.setProperty("is_hidden", "true")
+        self.pred_label.style().unpolish(self.pred_label)
+        self.pred_label.style().polish(self.pred_label)
+        self.pred_label.update()
         self.conf_label.clear()
-        self.conf_label.setStyleSheet("QLabel {\n" "border: 0px solid gold;\n" "}")
+        self.conf_label.setProperty("is_hidden", "true")
+        self.conf_label.style().unpolish(self.conf_label)
+        self.conf_label.style().polish(self.conf_label)
+        self.conf_label.update()
         self.delay_label.clear()
-        self.delay_label.setStyleSheet("QLabel {\n" "border: 0px solid gold;\n" "}")
+        self.delay_label.setProperty("is_hidden", "true")
+        self.delay_label.style().unpolish(self.delay_label)
+        self.delay_label.style().polish(self.delay_label)
+        self.delay_label.update()
 
     def closeEvent(self, event):
         self._destroy_thread()
@@ -160,18 +186,10 @@ class DetectWindow(QDialog, Ui_DetectDialog):
     def show_result(self):
         self._destroy_thread()
         self._clear_stats_labels()
-        self.main_image_label.clear()
         self.conf_label.destroy()
         self.delay_label.destroy()
         self.pred_label.destroy()
         self.main_image_label.setText(f"Result : {self._get_final_pred()}")
-        self.main_image_label.setStyleSheet(
-            "QLabel {\n"
-            "font-family:sans-serif;\n"
-            "color: #cfab2d;\n"
-            "font-size: 20px;\n"
-            "}"
-        )
         self._destroy_thread()
 
     def _destroy_thread(self):
@@ -188,75 +206,19 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         return max(results, key=results.get).replace("_", " ")
     
     def show_stats_labels(self):
-        self.main_image_label.setStyleSheet(
-            "QLabel{\n" "border: 3px solid gold;\n" "border-radius: 10px;\n" "}"
-        )
-        self.pred_label.setStyleSheet(
-            "QLabel {\n"
-            "border: 2px solid gold;\n"
-            "font-family:sans-serif;\n"
-            "color: #cfab2d;\n"
-            "font-size: 14px;\n"
-            "border-radius: 10px;\n"
-            "}"
-        )
-        self.conf_label.setStyleSheet(
-            "QLabel {\n"
-            "border: 2px solid gold;\n"
-            "font-family:sans-serif;\n"
-            "color: #cfab2d;\n"
-            "font-size: 14px;\n"
-            "border-radius: 10px;\n"
-            "}"
-        )
-        self.delay_label.setStyleSheet(
-            "QLabel {\n"
-            "border: 2px solid gold;\n"
-            "font-family:sans-serif;\n"
-            "color: #cfab2d;\n"
-            "font-size: 14px;\n"
-            "border-radius: 10px;\n"
-            "}"
-        )
-
-    def set_style_image_labels(self, second):
-        self.images_labels_dict[second]["image"].setStyleSheet(
-            "QLabel {\n"
-            "border: 2px solid gold;\n"
-            "font-family:sans-serif;\n"
-            "color: white;\n"
-            "font-size: 14px;\n"
-            "text-align: center;\n"
-            "border-radius: 10px;\n"
-            "}"
-        )
-        self.images_labels_dict[second]["conf"].setStyleSheet(
-            "QLabel {\n"
-            "border: 2px solid gold;\n"
-            "font-family:sans-serif;\n"
-            "color: white;\n"
-            "font-size: 14px;\n"
-            "text-align: center;\n"
-            "border-radius: 10px;\n"
-            "}"
-        )
-        self.images_labels_dict[second]["pred"].setStyleSheet(
-            "QLabel {\n"
-            "border: 2px solid gold;\n"
-            "font-family:sans-serif;\n"
-            "color: white;\n"
-            "font-size: 14px;\n"
-            "text-align: center;\n"
-            "border-radius: 10px;\n"
-            "}"
-        )
-        self.images_labels_dict[second]["sec"].setStyleSheet(
-            "QLabel {\n"
-            "border: 2px solid gold;\n"
-            "font-family:sans-serif;\n"
-            "color: white;\n"
-            "font-size: 14px;\n"
-            "text-align: center;\n"
-            "border-radius: 10px;\n"
-            "}"
-        )
+        self.main_image_label.setProperty("is_hidden", "false")
+        self.main_image_label.style().unpolish(self.main_image_label)
+        self.main_image_label.style().polish(self.main_image_label)
+        self.main_image_label.update()
+        self.pred_label.setProperty("is_hidden", "false")
+        self.pred_label.style().unpolish(self.pred_label)
+        self.pred_label.style().polish(self.pred_label)
+        self.pred_label.update()
+        self.conf_label.setProperty("is_hidden", "false")
+        self.conf_label.style().unpolish(self.conf_label)
+        self.conf_label.style().polish(self.conf_label)
+        self.conf_label.update()
+        self.delay_label.setProperty("is_hidden", "false")
+        self.delay_label.style().unpolish(self.delay_label)
+        self.delay_label.style().polish(self.delay_label)
+        self.delay_label.update()
