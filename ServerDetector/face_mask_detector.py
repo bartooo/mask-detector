@@ -28,9 +28,9 @@ class FaceMaskDetector:
         """
 
         Args:
-            model_path (str): path to trained model
             ds (Dataset): dataset used by model
             face_detector_path (str): path to face detector which will be used
+            model_path (str): path to trained model
         """
 
         self._face_detector = cv2.CascadeClassifier(face_detector_path)
@@ -123,7 +123,7 @@ class FaceMaskDetector:
         """
         Predicts to which class belongs given image array.
 
-        Predicted class - either 'with_mask' or 'without_mask' string.
+        Predicted class - either 'with_mask' or 'without_mask' string if face was detected, 'no face detected' otherwise.
         Confidence - percentage of model's confidence of classification.
         """
         # detect faces in image
