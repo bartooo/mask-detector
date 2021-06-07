@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets
 from Thread import Thread
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QFont, QImage, QPixmap
 from DetectorExceptions.ConnectionExceptions import validate_port
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton
@@ -79,15 +79,22 @@ class DetectWindow(QDialog, Ui_DetectDialog):
     def _hide_image_labels(self):
         for sec in range(1, 6):
             for i in {"image", "pred", "conf", "sec"}:
-                self.images_labels_dict[sec][i].setStyleSheet(
-                    "QLabel {\n" "border: 0px solid gold;\n" "}"
-                )
+                self.images_labels_dict[sec][i].setProperty("is_hidden", "true")
+                self.images_labels_dict[sec][i].style().unpolish(self.images_labels_dict[sec][i])
+                self.images_labels_dict[sec][i].style().polish(self.images_labels_dict[sec][i])
+                self.images_labels_dict[sec][i].update()
 
     def _connect_buttons(self):
         self.back_button.clicked.connect(self._on_back_button_clicked)
         self.detect_again_button.clicked.connect(self._on_detect_again_button_clicked)
 
     def _display_image_of_second(self, second):
+        for label_type in {"image", "pred", "conf", "sec"}:
+            self.images_labels_dict[second][label_type].setProperty("is_hidden", "false")
+            self.images_labels_dict[second][label_type].style().unpolish(self.images_labels_dict[second][label_type])
+            self.images_labels_dict[second][label_type].style().polish(self.images_labels_dict[second][label_type])
+            self.images_labels_dict[second][label_type].update()
+        
         self.images_labels_dict[second]["image"].setPixmap(
             QPixmap.fromImage(self.images_list[second - 1][0])
         )
@@ -100,7 +107,6 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.images_labels_dict[second]["sec"].setText(
             "Second: {}".format(str(self.images_list[second - 1][3]))
         )
-        self.set_style_image_labels(second)
 
     def _create_thread(self):
         self.th = Thread(self)
@@ -227,48 +233,6 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             "font-family:sans-serif;\n"
             "color: #cfab2d;\n"
             "font-size: 14px;\n"
-            "border-radius: 10px;\n"
-            "}"
-        )
-
-    def set_style_image_labels(self, second):
-        self.images_labels_dict[second]["image"].setStyleSheet(
-            "QLabel {\n"
-            "border: 2px solid gold;\n"
-            "font-family:sans-serif;\n"
-            "color: white;\n"
-            "font-size: 14px;\n"
-            "text-align: center;\n"
-            "border-radius: 10px;\n"
-            "}"
-        )
-        self.images_labels_dict[second]["conf"].setStyleSheet(
-            "QLabel {\n"
-            "border: 2px solid gold;\n"
-            "font-family:sans-serif;\n"
-            "color: white;\n"
-            "font-size: 14px;\n"
-            "text-align: center;\n"
-            "border-radius: 10px;\n"
-            "}"
-        )
-        self.images_labels_dict[second]["pred"].setStyleSheet(
-            "QLabel {\n"
-            "border: 2px solid gold;\n"
-            "font-family:sans-serif;\n"
-            "color: white;\n"
-            "font-size: 14px;\n"
-            "text-align: center;\n"
-            "border-radius: 10px;\n"
-            "}"
-        )
-        self.images_labels_dict[second]["sec"].setStyleSheet(
-            "QLabel {\n"
-            "border: 2px solid gold;\n"
-            "font-family:sans-serif;\n"
-            "color: white;\n"
-            "font-size: 14px;\n"
-            "text-align: center;\n"
             "border-radius: 10px;\n"
             "}"
         )
