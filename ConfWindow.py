@@ -31,6 +31,7 @@ class ButtonThread(QThread):
             payload_size = struct.calcsize("Q")
             data = b""
             for _ in range(2):
+                
                 while len(data) < payload_size:
                     packet = self.client_socket.recv(4 * 1024)  # 4KB
                     if not packet:
