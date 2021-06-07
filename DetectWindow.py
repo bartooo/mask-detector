@@ -99,7 +99,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             self._create_thread()
 
     def _on_back_button_clicked(self):
-        if not self.th.isRunning():
+        if self.th is None or not self.th.isRunning():
             self._destroy_thread()
             self.parent().show()
             self.destroy()
