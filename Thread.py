@@ -8,7 +8,7 @@ import cv2
 from PyQt5.QtCore import Qt
 import threading
 import datetime
-
+from DataGetter import DataGetter
 
 class Thread(QThread):
     def __init__(self, parent: typing.Optional[QObject]) -> None:
@@ -16,6 +16,7 @@ class Thread(QThread):
         self._finish = False
         self._run_seconds = 1
         self.timer = None
+        self.data_getter = DataGetter()
 
     change_pixmap = pyqtSignal(QImage)
     change_conf_label = pyqtSignal(str)
@@ -44,33 +45,15 @@ class Thread(QThread):
         self._finish = value
 
     def run(self):
-        payload_size = struct.calcsize("Q")
-        data = b""
+        #payload_size = struct.calcsize("Q")
         try:
             while not self.finish and self.run_seconds < 6:
                 # while loop to get size of receiving data
-                while len(data) < payload_size:
-                    packet = self.client_socket.recv(4 * 1024)  # 4KB
-                    if not packet:
-                        break
-                    data += packet
-                # counting size of sending data
-                packed_msg_size = data[:payload_size]
-                # if in first while loop there was download part of data, need to add it on start
-                data = data[payload_size:]
-                msg_size = struct.unpack("Q", packed_msg_size)[0]
-                # receiving concrete data
-                while len(data) < msg_size:
-                    data += self.client_socket.recv(4 * 1024)
-                # getting all data for current state
-                data_recv_pickled = data[:msg_size]
-                # setting data to whats left for next state
-                data = data[msg_size:]
+                data_recv_pickled = self.data_getter.get(self.client_socket)
                 # unpickle what we got
                 data_recv = pickle.loads(data_recv_pickled)
                 # show image and if q pressed - stop
                 print(
-                    # f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | NOW: {datetime.datetime.now()} | SEND: {data_recv.time_sended}"
                     f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | DIFF: {data_recv.time_sended}"
                 )
                 rgbImage = cv2.cvtColor(data_recv.frame, cv2.COLOR_BGR2RGB)

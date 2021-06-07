@@ -10,6 +10,7 @@ import typing
 from PyQt5.Qt import QImage, QObject, QPixmap
 import cv2
 from backports import configparser
+from DataGetter import DataGetter
 
 
 class ButtonThread(QThread):
@@ -17,6 +18,7 @@ class ButtonThread(QThread):
         super().__init__(parent=parent)
         self.server_name = parent.server_name
         self.server_port = parent.server_port
+        self.data_getter = DataGetter()
 
     change_photo_label_text = pyqtSignal(str)
     change_photo_label_img = pyqtSignal(QImage)
@@ -28,26 +30,8 @@ class ButtonThread(QThread):
         try:
             self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.client_socket.connect((self.server_name, self.server_port))
-            payload_size = struct.calcsize("Q")
-            data = b""
             for _ in range(2):
-                
-                while len(data) < payload_size:
-                    packet = self.client_socket.recv(4 * 1024)  # 4KB
-                    if not packet:
-                        break
-                    data += packet
-                packed_msg_size = data[:payload_size]
-                # if in first while loop there was download part of data, need to add it on start
-                data = data[payload_size:]
-                msg_size = struct.unpack("Q", packed_msg_size)[0]
-                # receiving concrete data
-                while len(data) < msg_size:
-                    data += self.client_socket.recv(4 * 1024)
-                # getting all data for current state
-                data_recv_pickled = data[:msg_size]
-                # setting data to whats left for next state
-                data = data[msg_size:]
+                data_recv_pickled = self.data_getter.get(self.client_socket)
             # unpickle what we got
             data_recv = pickle.loads(data_recv_pickled)
             rgbImage = cv2.cvtColor(data_recv.frame, cv2.COLOR_BGR2RGB)
