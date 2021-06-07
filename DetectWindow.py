@@ -29,16 +29,16 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.main_image_label.setPixmap(QPixmap.fromImage(image))
 
     @pyqtSlot(str)
-    def set_conf_label(self, text):
-        self.conf_label.setText(text)
+    def set_conf_label(self, conf):
+        self.conf_label.setText(f"Confidence: {conf}")
 
     @pyqtSlot(str)
-    def set_delay_label(self, text):
-        self.delay_label.setText(text)
+    def set_delay_label(self, delay):
+        self.delay_label.setText(f"Delay: {delay}")
 
     @pyqtSlot(str)
-    def set_pred_label(self, text):
-        self.pred_label.setText(text)
+    def set_pred_label(self, pred):
+        self.pred_label.setText(f"Prediction: {pred}")
 
     @pyqtSlot(QImage, str, str, int)
     def add_image(self, image, prediction, confidence, second):

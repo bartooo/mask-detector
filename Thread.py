@@ -86,8 +86,11 @@ class Thread(QThread):
                     convertToQtFormat.scaled(350, 350, Qt.KeepAspectRatio)
                 )
                 self.change_conf_label.emit(self.confidence)
-                self.change_delay_label.emit(str(data_recv.time_sended
-                ))
+                if type(data_recv.time_sended) is datetime.timedelta:
+                    self.change_delay_label.emit(
+                        # f"Delay: {(datetime.datetime.now() - data_recv.time_sended).total_seconds() * 1000:.3f} ms"
+                        f"{data_recv.time_sended.total_seconds()*1000:.3f}"
+                    )
                 self.change_pred_label.emit(self.prediction)
                 if self.run_seconds == 1:
                     self._send_frame()
