@@ -1,0 +1,1165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DetectDialog</class>
+ <widget class="QDialog" name="DetectDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>620</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1080</width>
+    <height>620</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <family>MS Sans Serif</family>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog{
+color: #cfab2d;
+background-color: #2a292e;
+border: 3px solid #cfab2d;
+border-radius: 10px;}
+   </string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_9">
+   <item>
+    <layout class="QVBoxLayout" name="main_vlayout">
+     <item>
+      <widget class="QLabel" name="title_label">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>sans-serif</family>
+         <pointsize>-1</pointsize>
+         <weight>75</weight>
+         <italic>false</italic>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel{
+    color: #cfab2d;
+    text-align: center;
+	margin: 0 auto;
+    font-weight: bold;
+	font-size: 24px;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}</string>
+       </property>
+       <property name="text">
+        <string>MASK DETECTION</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="buttons_photo_hlayout">
+       <item>
+        <layout class="QVBoxLayout" name="label_buttons_vlayout">
+         <item>
+          <spacer name="v_spac_1">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="labels_vlayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QLabel" name="delay_label">
+             <property name="maximumSize">
+              <size>
+               <width>300</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 2px solid #cfab2d;
+font-family:sans-serif;
+text-align: center;
+color: #cfab2d;
+font-size: 16px;
+font-weight: bold;
+border-radius: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+min-width: 300px;
+min-height: 40px;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 0px solid black;
+}</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QLabel" name="conf_label">
+             <property name="maximumSize">
+              <size>
+               <width>300</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 2px solid #cfab2d;
+font-family:sans-serif;
+text-align: center;
+color: #cfab2d;
+font-size: 16px;
+font-weight: bold;
+border-radius: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+min-width: 300px;
+min-height: 40px;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 0px soild black;
+}</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="v_spac_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QLabel" name="pred_label">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>300</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 2px solid #cfab2d;
+font-family:sans-serif;
+text-align: center;
+color: #cfab2d;
+font-size: 14px;
+font-weight: bold;
+border-radius: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+min-width: 300px;
+min-height: 40px;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 0px solid black;
+}</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="v_spac_4">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="buttons_hlayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="detect_again_button">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>177</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">/*QPushButton {
+border: 2px solid gold;
+font: sans-serif;
+color: #cfab2d;
+background-color: #2a292e;
+text-align: center;
+font-size: 12px;
+}
+
+QPushButton:hover {
+border: 2px solid gold;
+font: 13 px &quot;sans-serif&quot;;
+color:#2a292e;
+background-color: #cfab2d;
+}
+*/
+QPushButton{
+    color: #cfab2d;
+    background-color: #2a292e;
+    text-align: center;
+    max-width: 33em;
+    width: 9em;
+    font-size: 16px;
+    height: 2em;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+}
+
+QPushButton:hover{
+    color:#2a292e;
+    background-color: #cfab2d;
+}</string>
+             </property>
+             <property name="text">
+              <string>DETECT AGAIN</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="back_button">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>177</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">/*QPushButton {
+border: 2px solid gold;
+font: sans-serif;
+color: #cfab2d;
+background-color: #2a292e;
+text-align: center;
+font-size: 12px;
+}
+
+QPushButton:hover {
+border: 2px solid gold;
+font: 13 px &quot;sans-serif&quot;;
+color:#2a292e;
+background-color: #cfab2d;
+}
+*/
+QPushButton{
+    color: #cfab2d;
+    background-color: #2a292e;
+    text-align: center;
+    max-width: 33em;
+    width: 9em;
+    font-size: 16px;
+    height: 2em;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+}
+
+QPushButton:hover{
+    color:#2a292e;
+    background-color: #cfab2d;
+}</string>
+             </property>
+             <property name="text">
+              <string>BACK</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="main_image_label">
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>300</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>300</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 3px solid #cfab2d;
+border-radius: 10px;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+font-family:sans-serif;
+text-align: center;
+color: #cfab2d;
+font-size: 14px;
+font-weight: bold;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="styleSheet">
+        <string notr="true">
+background-color: #cfab2d;</string>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="history_hlayout">
+       <item>
+        <layout class="QVBoxLayout" name="history_1_vlayout">
+         <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+          <widget class="QLabel" name="image_label_1">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>150</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>150</width>
+             <height>150</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+QLabel[is_hidden=&quot;false&quot;]{
+border: 3px solid #cfab2d;
+border-radius: 10px;
+}
+
+QLabel[is_hidden=&quot;true&quot;]{
+border: 3px solid #2a292e;
+border-radius: 10px;
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="pred_label_1">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="conf_label_1">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="sec_label_1">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="history_2_vlayout">
+         <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+          <widget class="QLabel" name="image_label_2">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>150</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>150</width>
+             <height>150</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+QLabel[is_hidden=&quot;false&quot;]{
+border: 3px solid #cfab2d;
+border-radius: 10px;
+}
+
+QLabel[is_hidden=&quot;true&quot;]{
+border: 3px solid #2a292e;
+border-radius: 10px;
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="pred_label_2">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="conf_label_2">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="sec_label_2">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="history_3_vlayout">
+         <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+          <widget class="QLabel" name="image_label_3">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>150</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>150</width>
+             <height>150</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+QLabel[is_hidden=&quot;false&quot;]{
+border: 3px solid #cfab2d;
+border-radius: 10px;
+}
+
+QLabel[is_hidden=&quot;true&quot;]{
+border: 3px solid #2a292e;
+border-radius: 10px;
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="pred_label_3">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="conf_label_3">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="sec_label_3">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="history_4_vlayout">
+         <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+          <widget class="QLabel" name="image_label_4">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>150</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>150</width>
+             <height>150</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+QLabel[is_hidden=&quot;false&quot;]{
+border: 3px solid #cfab2d;
+border-radius: 10px;
+}
+
+QLabel[is_hidden=&quot;true&quot;]{
+border: 3px solid #2a292e;
+border-radius: 10px;
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="pred_label_4">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="conf_label_4">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="sec_label_4">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="history_5_vlayout">
+         <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+          <widget class="QLabel" name="image_label_5">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>150</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>150</width>
+             <height>150</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+QLabel[is_hidden=&quot;false&quot;]{
+border: 3px solid #cfab2d;
+border-radius: 10px;
+}
+
+QLabel[is_hidden=&quot;true&quot;]{
+border: 3px solid #2a292e;
+border-radius: 10px;
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="pred_label_5">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="conf_label_5">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="sec_label_5">
+           <property name="styleSheet">
+            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 1px solid #cfab2d;
+font-family:sans-serif;
+color: #cfab2d;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 1px solid #2a292e;
+font-family:sans-serif;
+color: #2a292e;
+font-size: 10px;
+text-align: center;
+border-radius: 5px;
+font-weight: bold;
+font-family: sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

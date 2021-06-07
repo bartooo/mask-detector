@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>624</width>
+    <height>810</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>REAL-TIME FACE MASK DETECTOR</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget #main_h_layout{
+    color: #cfab2d;
+    background-color: #2a292e;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+}</string>
+  </property>
+  <widget class="QWidget" name="main_h_layout">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <layout class="QVBoxLayout" name="menu_v_layout">
+      <item>
+       <spacer name="vert_spacer_logo_up">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item alignment="Qt::AlignHCenter|Qt::AlignTop">
+       <widget class="QLabel" name="logo_label">
+        <property name="minimumSize">
+         <size>
+          <width>600</width>
+          <height>600</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>600</width>
+          <height>600</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">*{}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="vert_spacer_up">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="button_warning_vlayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QPushButton" name="button_run_detector">
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+    color: #cfab2d;
+    background-color: #2a292e;
+    text-align: center;
+    max-width: 33em;
+    width: 12em;
+    font-size: 16px;
+    height: 3em;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+}
+
+QPushButton:hover{
+    color:#2a292e;
+    background-color: #cfab2d;
+}</string>
+          </property>
+          <property name="text">
+           <string>START DETECTION</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="warning_label">
+          <property name="styleSheet">
+           <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+    color: #cfab2d;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+	min-height: 15px;
+	max-height: 15px;
+
+}
+QLabel[is_hidden=&quot;true&quot;]{
+    color: #2a292e;
+    border: 3px solid #2a292e;
+    border-radius: 10px;
+	min-height: 15px;
+	max-height: 15px;
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="vert_spacer_down">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item alignment="Qt::AlignHCenter">
+       <widget class="QPushButton" name="button_config">
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+    color: #cfab2d;
+    background-color: #2a292e;
+    text-align: center;
+    max-width: 33em;
+    width: 12em;
+    font-size: 16px;
+    height: 3em;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 3px solid #cfab2d;
+    border-radius: 10px;
+}
+
+QPushButton:hover{
+    color:#2a292e;
+    background-color: #cfab2d;
+}</string>
+        </property>
+        <property name="text">
+         <string>SETTINGS</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="vert_spacer_config_down">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../../../../../Desktop/one.qrc"/>
+ </resources>
+ <connections/>
+</ui>
