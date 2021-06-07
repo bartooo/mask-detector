@@ -51,7 +51,6 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.images_list = []
         self._hide_image_labels()
         self._create_thread()
-        self.result_label = None
         
 
     @pyqtSlot(QImage)
@@ -143,10 +142,6 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             for i in {"image", "pred", "conf", "sec"}:
                 self.images_labels_dict[sec][i].clear()
 
-        if self.result_label:
-            self.result_label.clear()
-            self.result_label.hide()
-
     def _clear_stats_labels(self):
         self.main_image_label.clear()
         self.main_image_label.setStyleSheet("QLabel{\n" "border: 0px solid gold;\n" "}")
@@ -165,25 +160,18 @@ class DetectWindow(QDialog, Ui_DetectDialog):
     def show_result(self):
         self._destroy_thread()
         self._clear_stats_labels()
-        final_pred = self._get_final_pred()
-        self.main_image_label.destroy()
         self.main_image_label.clear()
         self.conf_label.destroy()
         self.delay_label.destroy()
         self.pred_label.destroy()
-        self.result_label = QLabel(self)
-        self.result_label.setStyleSheet(
+        self.main_image_label.setText(f"Result : {self._get_final_pred()}")
+        self.main_image_label.setStyleSheet(
             "QLabel {\n"
-            "font-family: sans-serif;\n"
+            "font-family:sans-serif;\n"
             "color: #cfab2d;\n"
-            "font-size: 22px;\n"
-            "font-weight: bold;\n"
+            "font-size: 20px;\n"
             "}"
         )
-        self.result_label.setText(f"Result : {final_pred}")
-        self.result_label.resize(400, 50)
-        self.result_label.move(900, 150)
-        self.result_label.show()
         self._destroy_thread()
 
     def _destroy_thread(self):
