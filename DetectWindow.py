@@ -12,6 +12,38 @@ class DetectWindow(QDialog, Ui_DetectDialog):
     def __init__(self, parent):
         super().__init__(parent=parent)
         self.setupUi(self)
+        self.images_labels_dict = {
+            1: {
+                "image": self.image_label_1,
+                "pred": self.pred_label_1,
+                "conf": self.conf_label_1,
+                "sec": self.sec_label_1,
+            },
+            2: {
+                "image": self.image_label_2,
+                "pred": self.pred_label_2,
+                "conf": self.conf_label_2,
+                "sec": self.sec_label_2,
+            },
+            3: {
+                "image": self.image_label_3,
+                "pred": self.pred_label_3,
+                "conf": self.conf_label_3,
+                "sec": self.sec_label_3,
+            },
+            4: {
+                "image": self.image_label_4,
+                "pred": self.pred_label_4,
+                "conf": self.conf_label_4,
+                "sec": self.sec_label_4,
+            },
+            5: {
+                "image": self.image_label_5,
+                "pred": self.pred_label_5,
+                "conf": self.conf_label_5,
+                "sec": self.sec_label_5,
+            },
+        }
         self._connect_buttons()
         validate_port(parent.server_port)
         self.server_name = parent.server_name
@@ -21,6 +53,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self._create_thread()
         self.result_label = None
         self.during_detection = True
+        
 
     @pyqtSlot(QImage)
     def set_main_image(self, image):
@@ -67,7 +100,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.images_labels_dict[second]["sec"].setText(
             "Second: {}".format(str(self.images_list[second - 1][3]))
         )
-        super().set_style_image_labels(second)
+        self.set_style_image_labels(second)
 
     def _create_thread(self):
         self.th = Thread(self)
@@ -94,7 +127,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             self.during_detection = True
             self.images_list.clear()
             self._clear_images_labels()
-            super().show_stats_labels()
+            self.show_stats_labels()
             self._hide_image_labels()
             self._create_thread()
 
@@ -165,3 +198,77 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             results[img[2]] += 1
 
         return max(results, key=results.get)
+    
+    def show_stats_labels(self):
+        self.main_image_label.setStyleSheet(
+            "QLabel{\n" "border: 3px solid gold;\n" "border-radius: 10px;\n" "}"
+        )
+        self.pred_label.setStyleSheet(
+            "QLabel {\n"
+            "border: 2px solid gold;\n"
+            "font-family:sans-serif;\n"
+            "color: #cfab2d;\n"
+            "font-size: 14px;\n"
+            "border-radius: 10px;\n"
+            "}"
+        )
+        self.conf_label.setStyleSheet(
+            "QLabel {\n"
+            "border: 2px solid gold;\n"
+            "font-family:sans-serif;\n"
+            "color: #cfab2d;\n"
+            "font-size: 14px;\n"
+            "border-radius: 10px;\n"
+            "}"
+        )
+        self.delay_label.setStyleSheet(
+            "QLabel {\n"
+            "border: 2px solid gold;\n"
+            "font-family:sans-serif;\n"
+            "color: #cfab2d;\n"
+            "font-size: 14px;\n"
+            "border-radius: 10px;\n"
+            "}"
+        )
+
+    def set_style_image_labels(self, second):
+        self.images_labels_dict[second]["image"].setStyleSheet(
+            "QLabel {\n"
+            "border: 2px solid gold;\n"
+            "font-family:sans-serif;\n"
+            "color: white;\n"
+            "font-size: 14px;\n"
+            "text-align: center;\n"
+            "border-radius: 10px;\n"
+            "}"
+        )
+        self.images_labels_dict[second]["conf"].setStyleSheet(
+            "QLabel {\n"
+            "border: 2px solid gold;\n"
+            "font-family:sans-serif;\n"
+            "color: white;\n"
+            "font-size: 14px;\n"
+            "text-align: center;\n"
+            "border-radius: 10px;\n"
+            "}"
+        )
+        self.images_labels_dict[second]["pred"].setStyleSheet(
+            "QLabel {\n"
+            "border: 2px solid gold;\n"
+            "font-family:sans-serif;\n"
+            "color: white;\n"
+            "font-size: 14px;\n"
+            "text-align: center;\n"
+            "border-radius: 10px;\n"
+            "}"
+        )
+        self.images_labels_dict[second]["sec"].setStyleSheet(
+            "QLabel {\n"
+            "border: 2px solid gold;\n"
+            "font-family:sans-serif;\n"
+            "color: white;\n"
+            "font-size: 14px;\n"
+            "text-align: center;\n"
+            "border-radius: 10px;\n"
+            "}"
+        )
