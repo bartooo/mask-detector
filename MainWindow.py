@@ -13,6 +13,7 @@ from MainWindowUI import Ui_MainWindow
 from PyQt5.Qt import QPixmap
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
+import socket
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -46,10 +47,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_run_detector.clicked.connect(self._on_start_button_clicked)
 
     def _on_start_button_clicked(self):
-        self.detect_window = DetectWindow(self)
-        self.detect_window.move(500, 100)
-        self.hide()
-        self.detect_window.show()
+        self.detect_window = None
+        try:
+            self.detect_window = DetectWindow(self)
+            self.detect_window.move(500, 100)
+            self.hide()
+            self.detect_window.show()
+            self.warning_label.clear()
+            self.warning_label.setProperty("is_hidden", "true")
+            self.warning_label.style().unpolish(self.warning_label)
+            self.warning_label.style().polish(self.warning_label)
+            self.warning_label.update()
+        except (socket.gaierror, ConnectionRefusedError) as e:
+            self.warning_label.setText("SETUP YOUR CONNECTION BEFORE STARTING PROGRAM!")
+            self.warning_label.setProperty("is_hidden", "false")
+            self.warning_label.style().unpolish(self.warning_label)
+            self.warning_label.style().polish(self.warning_label)
+            self.warning_label.update()
 
     def _on_config_button_clicked(self):
         self.config_window = ConfWindow(self)

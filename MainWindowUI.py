@@ -80,23 +80,36 @@ class Ui_MainWindow(object):
         self.warning_label.setStyleSheet(
             'QLabel[is_hidden="false"]{\n'
             "    color: #cfab2d;\n"
-            "    border: 3px solid #cfab2d;\n"
+            "    border: 1px solid #cfab2d;\n"
             "    border-radius: 10px;\n"
             "    min-height: 15px;\n"
             "    max-height: 15px;\n"
+            "    font-family: sans-serif;\n"
+            "    font-size: 9px;\n"
+            "    font-style: italic;\n"
+            "    text-transform: uppercase;\n"
+            "    letter-spacing: 0.1em;\n"
             "\n"
             "}\n"
             'QLabel[is_hidden="true"]{\n'
             "    color: #2a292e;\n"
-            "    border: 3px solid #2a292e;\n"
+            "    border: 1px solid #2a292e;\n"
             "    border-radius: 10px;\n"
             "    min-height: 15px;\n"
             "    max-height: 15px;\n"
+            "    font-family: sans-serif;\n"
+            "    font-style: italic;\n"
+            "    font-size: 9px;\n"
+            "    text-transform: uppercase;\n"
+            "    letter-spacing: 0.1em;\n"
             "}"
         )
         self.warning_label.setText("")
+        self.warning_label.setAlignment(QtCore.Qt.AlignCenter)
         self.warning_label.setObjectName("warning_label")
-        self.button_warning_vlayout.addWidget(self.warning_label)
+        self.button_warning_vlayout.addWidget(
+            self.warning_label, 0, QtCore.Qt.AlignHCenter
+        )
         self.menu_v_layout.addLayout(self.button_warning_vlayout)
         spacerItem2 = QtWidgets.QSpacerItem(
             20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
