@@ -55,22 +55,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.detect_window.show()
             self.warning_label.clear()
             self.warning_label.setProperty("is_hidden", "true")
-            self.warning_label.style().unpolish(
-                self.warning_label
-            )
-            self.warning_label.style().polish(
-                self.warning_label
-            )
+            self.warning_label.style().unpolish(self.warning_label)
+            self.warning_label.style().polish(self.warning_label)
             self.warning_label.update()
         except (socket.gaierror, ConnectionRefusedError) as e:
             self.warning_label.setText("SETUP YOUR CONNECTION BEFORE STARTING PROGRAM!")
             self.warning_label.setProperty("is_hidden", "false")
-            self.warning_label.style().unpolish(
-                self.warning_label
-            )
-            self.warning_label.style().polish(
-                self.warning_label
-            )
+            self.warning_label.style().unpolish(self.warning_label)
+            self.warning_label.style().polish(self.warning_label)
             self.warning_label.update()
 
     def _on_config_button_clicked(self):
