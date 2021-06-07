@@ -52,7 +52,6 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self._hide_image_labels()
         self._create_thread()
         self.result_label = None
-        self.during_detection = True
         
 
     @pyqtSlot(QImage)
@@ -122,9 +121,8 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.server_port = self.parent().server_port
 
     def _on_detect_again_button_clicked(self):
-        # let user detect again only if previous detection is done
-        if self.th is None or self.th.isFinished():
-            self.during_detection = True
+        # let user detect again only if previous thread is finished
+        if self._is_thread_finished():
             self.images_list.clear()
             self._clear_images_labels()
             self.show_stats_labels()
@@ -132,10 +130,13 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             self._create_thread()
 
     def _on_back_button_clicked(self):
-        if self.th is None or not self.th.isRunning():
+        if self._is_thread_finished():
             self._destroy_thread()
             self.parent().show()
             self.destroy()
+
+    def _is_thread_finished(self):
+        return self.th is None or self.th.isFinished()
 
     def _clear_images_labels(self):
         for sec in range(1, 6):
@@ -184,7 +185,6 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.result_label.move(900, 150)
         self.result_label.show()
         self._destroy_thread()
-        self.during_detection = False
 
     def _destroy_thread(self):
         if self.th:
