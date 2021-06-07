@@ -7,6 +7,7 @@ import pickle
 import cv2
 from PyQt5.QtCore import Qt
 import threading
+import datetime
 
 
 class Thread(QThread):
@@ -85,10 +86,11 @@ class Thread(QThread):
                     convertToQtFormat.scaled(350, 350, Qt.KeepAspectRatio)
                 )
                 self.change_conf_label.emit(f"Confidence: {self.confidence}%")
-                self.change_delay_label.emit(
-                    # f"Delay: {(datetime.datetime.now() - data_recv.time_sended).total_seconds() * 1000:.3f} ms"
-                    f"Delay: {data_recv.time_sended} ms"
-                )
+                if type(data_recv.time_sended) is datetime.timedelta:
+                    self.change_delay_label.emit(
+                        # f"Delay: {(datetime.datetime.now() - data_recv.time_sended).total_seconds() * 1000:.3f} ms"
+                        f"Delay: {data_recv.time_sended.total_seconds()*1000:.3f} ms"
+                    )
                 self.change_pred_label.emit(f"Prediction: {self.prediction}")
                 if self.run_seconds == 1:
                     self._send_frame()

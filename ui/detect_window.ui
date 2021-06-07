@@ -103,18 +103,28 @@ border-radius: 10px;}
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">QLabel {
-border: 2px solid gold;
-font-famly:sans-serif;
+              <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 2px solid #cfab2d;
+font-family:sans-serif;
+text-align: center;
 color: #cfab2d;
-font-size: 14px;
+font-size: 16px;
+font-weight: bold;
 border-radius: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
 min-width: 300px;
 min-height: 40px;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 0px solid black;
 }</string>
              </property>
              <property name="text">
               <string/>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
@@ -140,18 +150,28 @@ min-height: 40px;
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">QLabel {
-border: 2px solid gold;
-font-famly:sans-serif;
+              <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 2px solid #cfab2d;
+font-family:sans-serif;
+text-align: center;
 color: #cfab2d;
-font-size: 14px;
+font-size: 16px;
+font-weight: bold;
 border-radius: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
 min-width: 300px;
 min-height: 40px;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 0px soild black;
 }</string>
              </property>
              <property name="text">
               <string/>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
@@ -172,8 +192,8 @@ min-height: 40px;
             <widget class="QLabel" name="pred_label">
              <property name="minimumSize">
               <size>
-               <width>304</width>
-               <height>44</height>
+               <width>0</width>
+               <height>0</height>
               </size>
              </property>
              <property name="maximumSize">
@@ -183,18 +203,28 @@ min-height: 40px;
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">QLabel {
-border: 2px solid gold;
-font-famly:sans-serif;
+              <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 2px solid #cfab2d;
+font-family:sans-serif;
+text-align: center;
 color: #cfab2d;
 font-size: 14px;
+font-weight: bold;
 border-radius: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
 min-width: 300px;
 min-height: 40px;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+border: 0px solid black;
 }</string>
              </property>
              <property name="text">
               <string/>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
@@ -354,9 +384,18 @@ QPushButton:hover{
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QLabel{
-border: 3px solid gold;
+          <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
+border: 3px solid #cfab2d;
 border-radius: 10px;
+}
+QLabel[is_hidden=&quot;true&quot;]{
+font-family:sans-serif;
+text-align: center;
+color: #cfab2d;
+font-size: 14px;
+font-weight: bold;
+letter-spacing: 0.1em;
+text-transform: uppercase;
 }</string>
          </property>
          <property name="text">
@@ -368,6 +407,10 @@ border-radius: 10px;
      </item>
      <item>
       <widget class="Line" name="line">
+       <property name="styleSheet">
+        <string notr="true">
+background-color: #cfab2d;</string>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -412,24 +455,24 @@ border-radius: 10px;
           <widget class="QLabel" name="pred_label_1">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -449,24 +492,24 @@ letter-spacing: 0.1em;
           <widget class="QLabel" name="conf_label_1">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -486,24 +529,24 @@ letter-spacing: 0.1em;
           <widget class="QLabel" name="sec_label_1">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -558,24 +601,24 @@ border-radius: 10px;
           <widget class="QLabel" name="pred_label_2">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -595,24 +638,24 @@ letter-spacing: 0.1em;
           <widget class="QLabel" name="conf_label_2">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -632,24 +675,24 @@ letter-spacing: 0.1em;
           <widget class="QLabel" name="sec_label_2">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -704,24 +747,24 @@ border-radius: 10px;
           <widget class="QLabel" name="pred_label_3">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -741,24 +784,24 @@ letter-spacing: 0.1em;
           <widget class="QLabel" name="conf_label_3">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -778,24 +821,24 @@ letter-spacing: 0.1em;
           <widget class="QLabel" name="sec_label_3">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -853,24 +896,24 @@ border-radius: 10px;
           <widget class="QLabel" name="pred_label_4">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -890,24 +933,24 @@ letter-spacing: 0.1em;
           <widget class="QLabel" name="conf_label_4">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -927,24 +970,24 @@ letter-spacing: 0.1em;
           <widget class="QLabel" name="sec_label_4">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -1002,24 +1045,24 @@ border-radius: 10px;
           <widget class="QLabel" name="pred_label_5">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -1039,24 +1082,24 @@ letter-spacing: 0.1em;
           <widget class="QLabel" name="conf_label_5">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
@@ -1076,24 +1119,24 @@ letter-spacing: 0.1em;
           <widget class="QLabel" name="sec_label_5">
            <property name="styleSheet">
             <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
-border: 2px solid #cfab2d;
+border: 1px solid #cfab2d;
 font-family:sans-serif;
 color: #cfab2d;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
 letter-spacing: 0.1em;
 }
 QLabel[is_hidden=&quot;true&quot;]{
-border: 2px solid #2a292e;
+border: 1px solid #2a292e;
 font-family:sans-serif;
 color: #2a292e;
 font-size: 10px;
 text-align: center;
-border-radius: 10px;
+border-radius: 5px;
 font-weight: bold;
 font-family: sans-serif;
 text-transform: uppercase;
