@@ -10,6 +10,7 @@ import threading
 import datetime
 from DataGetter import DataGetter
 
+
 class Thread(QThread):
     def __init__(self, parent: typing.Optional[QObject]) -> None:
         super().__init__(parent=parent)
@@ -45,7 +46,7 @@ class Thread(QThread):
         self._finish = value
 
     def run(self):
-        #payload_size = struct.calcsize("Q")
+        # payload_size = struct.calcsize("Q")
         try:
             while not self.finish and self.run_seconds < 6:
                 # while loop to get size of receiving data
@@ -53,7 +54,11 @@ class Thread(QThread):
                 # unpickle what we got
                 data_recv = pickle.loads(data_recv_pickled)
                 # show image and if q pressed - stop
-                delay = f"{data_recv.time_sended.total_seconds()*1000:.3f}" if (type(data_recv.time_sended) is datetime.timedelta) else "N/A"
+                delay = (
+                    f"{data_recv.time_sended.total_seconds()*1000:.3f}"
+                    if (type(data_recv.time_sended) is datetime.timedelta)
+                    else "N/A"
+                )
                 print(
                     f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | DIFF: {delay}"
                 )
@@ -86,7 +91,6 @@ class Thread(QThread):
             self.show_result.emit()
         except (struct.error) as e:
             self.client_socket.close()
-        
 
     def _send_frame(self):
         self.add_image.emit(

@@ -23,7 +23,6 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self._hide_image_labels()
         self.show_stats_labels()
         self._create_thread()
-        
 
     @pyqtSlot(QImage)
     def set_main_image(self, image):
@@ -47,8 +46,9 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self._display_image_of_second(second)
 
     def _setup_window(self):
-        self.setWindowIcon(QtGui.QIcon('logo.png'))
-        self.setWindowTitle('REAL-TIME FACE MASK DETECTOR')
+        self.setWindowIcon(QtGui.QIcon("ui/logo.png"))
+        self.setWindowTitle("REAL-TIME FACE MASK DETECTOR")
+
     def _setup_dict(self):
         self.images_labels_dict = {
             1: {
@@ -91,8 +91,12 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         for sec in range(1, 6):
             for i in {"image", "pred", "conf", "sec"}:
                 self.images_labels_dict[sec][i].setProperty("is_hidden", "true")
-                self.images_labels_dict[sec][i].style().unpolish(self.images_labels_dict[sec][i])
-                self.images_labels_dict[sec][i].style().polish(self.images_labels_dict[sec][i])
+                self.images_labels_dict[sec][i].style().unpolish(
+                    self.images_labels_dict[sec][i]
+                )
+                self.images_labels_dict[sec][i].style().polish(
+                    self.images_labels_dict[sec][i]
+                )
                 self.images_labels_dict[sec][i].update()
 
     def _connect_buttons(self):
@@ -101,11 +105,17 @@ class DetectWindow(QDialog, Ui_DetectDialog):
 
     def _display_image_of_second(self, second):
         for label_type in {"image", "pred", "conf", "sec"}:
-            self.images_labels_dict[second][label_type].setProperty("is_hidden", "false")
-            self.images_labels_dict[second][label_type].style().unpolish(self.images_labels_dict[second][label_type])
-            self.images_labels_dict[second][label_type].style().polish(self.images_labels_dict[second][label_type])
+            self.images_labels_dict[second][label_type].setProperty(
+                "is_hidden", "false"
+            )
+            self.images_labels_dict[second][label_type].style().unpolish(
+                self.images_labels_dict[second][label_type]
+            )
+            self.images_labels_dict[second][label_type].style().polish(
+                self.images_labels_dict[second][label_type]
+            )
             self.images_labels_dict[second][label_type].update()
-        
+
         self.images_labels_dict[second]["image"].setPixmap(
             QPixmap.fromImage(self.images_list[second - 1][0])
         )
@@ -203,12 +213,12 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             self.th = None
 
     def _get_final_pred(self):
-        results = {"with_mask": 0, "without_mask": 0, "NO FACE": 0, "MULTIPLE FACES":0}
+        results = {"with_mask": 0, "without_mask": 0, "NO FACE": 0, "MULTIPLE FACES": 0}
         for img in self.images_list:
             results[img[2]] += 1
-        
+
         return max(results, key=results.get).replace("_", " ")
-    
+
     def show_stats_labels(self):
         self.main_image_label.clear()
         self.main_image_label.setProperty("is_hidden", "false")

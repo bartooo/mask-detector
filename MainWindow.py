@@ -27,14 +27,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.show()
 
     def _setup_logo(self):
-        loaded_pixmap = QPixmap("logo-gold.png").scaled(600, 600, Qt.KeepAspectRatio)
-        self.setWindowIcon(QtGui.QIcon('logo.png'))        
+        loaded_pixmap = QPixmap("ui/logo-gold.png").scaled(600, 600, Qt.KeepAspectRatio)
+        self.setWindowIcon(QtGui.QIcon("ui/logo.png"))
         self.logo_label.setPixmap(loaded_pixmap)
 
     def _setup_cursors(self):
         self.button_config.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
         self.button_run_detector.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
-
 
     def _load_config(self):
         cfg_parser = configparser.ConfigParser()

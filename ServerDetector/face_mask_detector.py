@@ -107,9 +107,7 @@ class FaceMaskDetector:
         cv2.rectangle(img_haar, (x, y), (x + w, y + h), COLOR_DICT[predicted_class], 3)
 
     def _draw_info_on_image_without_face(self, predicted_class, img_haar):
-        textsize = cv2.getTextSize(predicted_class, cv2.FONT_HERSHEY_DUPLEX, 2, 1)[
-            0
-        ]
+        textsize = cv2.getTextSize(predicted_class, cv2.FONT_HERSHEY_DUPLEX, 2, 1)[0]
         cv2.putText(
             img_haar,
             predicted_class,
