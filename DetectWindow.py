@@ -51,8 +51,6 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.images_list = []
         self._hide_image_labels()
         self._create_thread()
-        self.result_label = None
-        self.during_detection = True
         
 
     @pyqtSlot(QImage)
@@ -128,9 +126,8 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.server_port = self.parent().server_port
 
     def _on_detect_again_button_clicked(self):
-        # let user detect again only if previous detection is done
-        if self.th is None or self.th.isFinished():
-            self.during_detection = True
+        # let user detect again only if previous thread is finished
+        if self._is_thread_finished():
             self.images_list.clear()
             self._clear_images_labels()
             self.show_stats_labels()
@@ -138,19 +135,18 @@ class DetectWindow(QDialog, Ui_DetectDialog):
             self._create_thread()
 
     def _on_back_button_clicked(self):
-        if self.th is None or not self.th.isRunning():
+        if self._is_thread_finished():
             self._destroy_thread()
             self.parent().show()
             self.destroy()
+
+    def _is_thread_finished(self):
+        return self.th is None or self.th.isFinished()
 
     def _clear_images_labels(self):
         for sec in range(1, 6):
             for i in {"image", "pred", "conf", "sec"}:
                 self.images_labels_dict[sec][i].clear()
-
-        if self.result_label:
-            self.result_label.clear()
-            self.result_label.hide()
 
     def _clear_stats_labels(self):
         self.main_image_label.clear()
@@ -170,27 +166,19 @@ class DetectWindow(QDialog, Ui_DetectDialog):
     def show_result(self):
         self._destroy_thread()
         self._clear_stats_labels()
-        final_pred = self._get_final_pred()
-        self.main_image_label.destroy()
         self.main_image_label.clear()
         self.conf_label.destroy()
         self.delay_label.destroy()
         self.pred_label.destroy()
-        self.result_label = QLabel(self)
-        self.result_label.setStyleSheet(
+        self.main_image_label.setText(f"Result : {self._get_final_pred()}")
+        self.main_image_label.setStyleSheet(
             "QLabel {\n"
-            "font-family: sans-serif;\n"
+            "font-family:sans-serif;\n"
             "color: #cfab2d;\n"
-            "font-size: 22px;\n"
-            "font-weight: bold;\n"
+            "font-size: 20px;\n"
             "}"
         )
-        self.result_label.setText(f"Result : {final_pred}")
-        self.result_label.resize(400, 50)
-        self.result_label.move(900, 150)
-        self.result_label.show()
         self._destroy_thread()
-        self.during_detection = False
 
     def _destroy_thread(self):
         if self.th:
