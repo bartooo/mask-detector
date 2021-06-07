@@ -30,11 +30,11 @@ class DetectWindow(QDialog, Ui_DetectDialog):
 
     @pyqtSlot(str)
     def set_conf_label(self, conf):
-        self.conf_label.setText(f"Confidence: {conf}")
+        self.conf_label.setText(f"Confidence: {conf}%")
 
     @pyqtSlot(str)
     def set_delay_label(self, delay):
-        self.delay_label.setText(f"Delay: {delay}")
+        self.delay_label.setText(f"Delay: {delay} ms")
 
     @pyqtSlot(str)
     def set_pred_label(self, pred):
