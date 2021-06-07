@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 from Thread import Thread
 from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QCursor, QFont, QImage, QPixmap
@@ -12,6 +12,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
     def __init__(self, parent):
         super().__init__(parent=parent)
         self.setupUi(self)
+        self._setup_window()
         self._setup_dict()
         self._connect_buttons()
         self._setup_cursors()
@@ -45,6 +46,9 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.images_list.append((image, prediction, confidence, second))
         self._display_image_of_second(second)
 
+    def _setup_window(self):
+        self.setWindowIcon(QtGui.QIcon('logo.png'))
+        self.setWindowTitle('REAL-TIME FACE MASK DETECTOR')
     def _setup_dict(self):
         self.images_labels_dict = {
             1: {
@@ -206,6 +210,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         return max(results, key=results.get).replace("_", " ")
     
     def show_stats_labels(self):
+        self.main_image_label.clear()
         self.main_image_label.setProperty("is_hidden", "false")
         self.main_image_label.style().unpolish(self.main_image_label)
         self.main_image_label.style().polish(self.main_image_label)

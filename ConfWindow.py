@@ -48,7 +48,7 @@ class ButtonThread(QThread):
                 f"{data_recv.time_sended.total_seconds()*1000:.3f} ms"
             )
             self.client_socket.close()
-        except (ConnectionRefusedError, socket.gaierror) as conn_exc:
+        except (ConnectionRefusedError, socket.gaierror, struct.error) as conn_exc:
             self.change_photo_label_text.emit("CONNECTION\nREFUSED!")
             self.change_latency_label.emit("N/A!")
             self.client_socket.close()
@@ -140,9 +140,9 @@ class ConfWindow(QDialog, Ui_ConfigureDialog):
         self.parent().server_name = self.server_box.currentText()
         self.server_name = self.parent().server_name
         cfg_parser = configparser.ConfigParser()
-        cfg_parser.read(self.parent().config_path)
+        cfg_parser.read(self.parent()._config_path)
         cfg_parser["DEFAULT"]["servername"] = self.server_box.currentText()
-        with open(self.parent().config_path, "w+") as configfile:
+        with open(self.parent()._config_path, "w+") as configfile:
             cfg_parser.write(configfile)
 
     def on_exit_button_clicked(self):

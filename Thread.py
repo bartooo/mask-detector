@@ -53,8 +53,9 @@ class Thread(QThread):
                 # unpickle what we got
                 data_recv = pickle.loads(data_recv_pickled)
                 # show image and if q pressed - stop
+                delay = f"{data_recv.time_sended.total_seconds()*1000:.3f}" if (type(data_recv.time_sended) is datetime.timedelta) else "N/A"
                 print(
-                    f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | DIFF: {data_recv.time_sended}"
+                    f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | DIFF: {delay}"
                 )
                 rgbImage = cv2.cvtColor(data_recv.frame, cv2.COLOR_BGR2RGB)
                 h, w, ch = rgbImage.shape
