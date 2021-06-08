@@ -9,6 +9,7 @@ from PyQt5.QtCore import Qt
 import threading
 import datetime
 from DataGetter import DataGetter
+from LoggingStructure import LoggingList, LoggingStructure
 
 
 class Thread(QThread):
@@ -18,6 +19,7 @@ class Thread(QThread):
         self._run_seconds = 1
         self.timer = None
         self.data_getter = DataGetter()
+        self.logging_list = LoggingList()
 
     change_pixmap = pyqtSignal(QImage)
     change_conf_label = pyqtSignal(str)
@@ -55,12 +57,16 @@ class Thread(QThread):
                 data_recv = pickle.loads(data_recv_pickled)
                 # show image and if q pressed - stop
                 delay = (
-                    f"{data_recv.time_sended.total_seconds()*1000:.3f}"
+                    data_recv.time_sended.total_seconds() * 1000
                     if (type(data_recv.time_sended) is datetime.timedelta)
                     else "N/A"
                 )
-                print(
-                    f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | DIFF: {delay}"
+                # print(
+                #     f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | DIFF: {delay}"
+                # )
+
+                self.logging_list.add_element(
+                    LoggingStructure(datetime.datetime.now(), data_recv.decision, delay)
                 )
                 rgbImage = cv2.cvtColor(data_recv.frame, cv2.COLOR_BGR2RGB)
                 h, w, ch = rgbImage.shape
@@ -77,7 +83,6 @@ class Thread(QThread):
                 self.change_conf_label.emit(self.confidence)
                 if type(data_recv.time_sended) is datetime.timedelta:
                     self.change_delay_label.emit(
-                        # f"Delay: {(datetime.datetime.now() - data_recv.time_sended).total_seconds() * 1000:.3f} ms"
                         f"{data_recv.time_sended.total_seconds()*1000:.3f}"
                     )
                 self.change_pred_label.emit(self.prediction)
@@ -87,6 +92,8 @@ class Thread(QThread):
                 elif self.run_seconds == 6:
                     self.timer.cancel()
 
+            if self.parent().logging_enabled:
+                self.logging_list.save_to_file()
             self.client_socket.close()
             self.show_result.emit()
         except (struct.error) as e:

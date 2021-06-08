@@ -6,12 +6,11 @@ from DetectorExceptions.ConnectionExceptions import validate_port
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton
 import socket
 from DetectWindowUI import Ui_DetectDialog
-from ResultDialog import ResultDialog
 from ResultWindow import ResultWindow
 
 
 class DetectWindow(QDialog, Ui_DetectDialog):
-    def __init__(self, parent):
+    def __init__(self, parent, logging_enabled):
         super().__init__(parent=parent)
         self.setupUi(self)
         self._setup_window()
@@ -22,6 +21,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self.server_name = parent.server_name
         self.server_port = parent.server_port
         self.images_list = []
+        self.logging_enabled = logging_enabled
         self._hide_image_labels()
         self.show_stats_labels()
         self._create_thread()

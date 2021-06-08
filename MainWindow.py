@@ -16,9 +16,21 @@ from PyQt5.QtGui import QCursor
 import socket
 
 
+def get_logging_param(comm_args):
+    if len(comm_args) == 1:
+        return False
+    elif len(comm_args) == 2 and comm_args[1] == "--logging":
+        return True
+    else:
+        raise Exception(
+            "Only possible argument to pass (not required) is: --logging which enables logging"
+        )
+
+
 class MainWindow(QMainWindow, Ui_MainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, logging_enabled, parent=None):
         super().__init__(parent)
+        self.logging_enabled = logging_enabled
         self.setupUi(self)
         self._config_path = "ClientDetector/config.ini"
         self._setup_cursors()
@@ -49,7 +61,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def _on_start_button_clicked(self):
         self.detect_window = None
         try:
-            self.detect_window = DetectWindow(self)
+            self.detect_window = DetectWindow(self, self.logging_enabled)
             self.detect_window.move(500, 100)
             self.hide()
             self.detect_window.show()
@@ -68,10 +80,3 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def _on_config_button_clicked(self):
         self.config_window = ConfWindow(self)
         self.config_window.show()
-
-
-if __name__ == "__main__":
-
-    app = QApplication([])
-    window = MainWindow()
-    sys.exit(app.exec_())
