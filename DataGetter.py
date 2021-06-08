@@ -3,11 +3,11 @@ import struct
 
 
 class DataGetter:
-    def __init__(self)->None:
+    def __init__(self) -> None:
         self.data = b""
         self.payload_size = struct.calcsize("Q")
 
-    def get(self, client_socket:socket.socket) ->bytes:
+    def get(self, client_socket: socket.socket) -> bytes:
         while len(self.data) < self.payload_size:
             packet = client_socket.recv(4 * 1024)  # 4KB
             if not packet:

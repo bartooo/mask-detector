@@ -34,7 +34,7 @@ class HostClient:
         """Function connects to server"""
         self.client_socket.connect((self.server_name, self.server_port))
 
-    def start(self) ->None:
+    def start(self) -> None:
         """Function starts connection to server and downloads data from it"""
         data = b""
         while True:
@@ -69,6 +69,6 @@ class HostClient:
         # disconnect from server
         self.disconnect()
 
-    def disconnect(self) ->None:
+    def disconnect(self) -> None:
         """Simple function disconnects from server."""
         self.client_socket.close()
