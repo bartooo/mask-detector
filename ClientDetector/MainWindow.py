@@ -1,4 +1,4 @@
-from DetectWindow import DetectWindow
+from ClientDetector.DetectWindow import DetectWindow
 import sys
 from PyQt5.QtWidgets import (
     QDialog,
@@ -7,9 +7,9 @@ from PyQt5.QtWidgets import (
     QApplication,
 )
 from PyQt5 import QtCore, QtGui, uic
-from ConfWindow import ConfWindow
+from ClientDetector.ConfWindow import ConfWindow
 from backports import configparser
-from MainWindowUI import Ui_MainWindow
+from ClientDetector.pyui.MainWindowUI import Ui_MainWindow
 from PyQt5.Qt import QPixmap
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
@@ -40,8 +40,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.show()
 
     def _setup_logo(self):
-        loaded_pixmap = QPixmap("ui/logo-gold.png").scaled(600, 600, Qt.KeepAspectRatio)
-        self.setWindowIcon(QtGui.QIcon("ui/logo.png"))
+        loaded_pixmap = QPixmap("ClientDetector/resources/logo-gold.png").scaled(
+            600, 600, Qt.KeepAspectRatio
+        )
+        self.setWindowIcon(QtGui.QIcon("ClientDetector/resources/logo.png"))
         self.logo_label.setPixmap(loaded_pixmap)
 
     def _setup_cursors(self):

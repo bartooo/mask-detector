@@ -1,5 +1,5 @@
 import sys
-from MainWindow import MainWindow, get_logging_param
+from ClientDetector.MainWindow import MainWindow, get_logging_param
 from PyQt5.Qt import QApplication
 
 

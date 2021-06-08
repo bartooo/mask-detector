@@ -1,12 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from Thread import Thread
+from ClientDetector.ClientThread import ClientThread
 from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QCursor, QFont, QImage, QPixmap
 from DetectorExceptions.ConnectionExceptions import validate_port
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton
 import socket
-from DetectWindowUI import Ui_DetectDialog
-from ResultWindow import ResultWindow
+from ClientDetector.pyui.DetectWindowUI import Ui_DetectDialog
+from ClientDetector.ResultWindow import ResultWindow
 
 
 class DetectWindow(QDialog, Ui_DetectDialog):
@@ -48,7 +48,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         self._display_image_of_second(second)
 
     def _setup_window(self):
-        self.setWindowIcon(QtGui.QIcon("ui/logo.png"))
+        self.setWindowIcon(QtGui.QIcon("ClientDetector/resources/logo.png"))
         self.setWindowTitle("REAL-TIME FACE MASK DETECTOR")
 
     def _setup_dict(self):
@@ -132,7 +132,7 @@ class DetectWindow(QDialog, Ui_DetectDialog):
         )
 
     def _create_thread(self):
-        self.th = Thread(self)
+        self.th = ClientThread(self)
         self.th.change_pixmap.connect(self.set_main_image)
         self.th.change_conf_label.connect(self.set_conf_label)
         self.th.change_delay_label.connect(self.set_delay_label)

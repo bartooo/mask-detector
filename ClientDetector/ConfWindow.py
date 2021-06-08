@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QDialog, QMainWindow, QDesktopWidget
-from ConfigWindowUI import Ui_ConfigureDialog
+from ClientDetector.pyui.ConfigWindowUI import Ui_ConfigureDialog
 from PyQt5 import Qt, QtCore
 from PyQt5.QtGui import QCursor
 from PyQt5.QtCore import pyqtSignal, QThread, pyqtSlot, QMutex
@@ -10,7 +10,7 @@ import typing
 from PyQt5.Qt import QImage, QObject, QPixmap
 import cv2
 from backports import configparser
-from DataGetter import DataGetter
+from ClientDetector.DataGetter import DataGetter
 
 
 class ButtonThread(QThread):

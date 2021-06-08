@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QDialog, QDesktopWidget, QMainWindow
-from ResultWindowUI import Ui_ResultWindow
+from ClientDetector.pyui.ResultWindowUI import Ui_ResultWindow
 from PyQt5 import QtCore
 import webbrowser
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
@@ -48,7 +48,7 @@ class ResultWindow(QMainWindow, Ui_ResultWindow):
     def setup_gui(self):
         self.result_label.setText(self.result)
         self.mediaPlayer.setVideoOutput(self.video_widget)
-        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("ui/video.mp4")))
+        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("ClientDetector/resources/video.mp4")))
         self.mediaPlayer.play()
 
     def closeEvent(self, event):

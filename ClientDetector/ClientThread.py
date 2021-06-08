@@ -8,11 +8,11 @@ import cv2
 from PyQt5.QtCore import Qt
 import threading
 import datetime
-from DataGetter import DataGetter
-from LoggingStructure import LoggingList, LoggingStructure
+from ClientDetector.DataGetter import DataGetter
+from ClientDetector.LoggingStructure import LoggingList, LoggingStructure
 
 
-class Thread(QThread):
+class ClientThread(QThread):
     def __init__(self, parent: typing.Optional[QObject]) -> None:
         super().__init__(parent=parent)
         self._finish = False
