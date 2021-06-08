@@ -1,14 +1,11 @@
 import socket
 import threading
-import multiprocessing
 import cv2
 import pickle
 import struct
-import imutils
 import errno
-from datetime import date, datetime
+from datetime import datetime
 from typing import Any
-import sys
 from ServerDetector.face_mask_detector import FaceMaskDetector
 from ServerDetector.parameters import (
     IMG_HEIGHT,
@@ -17,7 +14,7 @@ from ServerDetector.parameters import (
     FACE_DETECTOR_PATH,
 )
 from DataPacker.DataPacker import DataPacker
-from DetectorExceptions.ConnectionExceptions import WrongPortException, validate_port
+from DetectorExceptions.ConnectionExceptions import validate_port
 
 
 class ServerDetector:
@@ -25,7 +22,7 @@ class ServerDetector:
     image from camera and sends it to connected host
     """
 
-    def __init__(self, serv_addr: str, serv_port: int, camera: Any = None):
+    def __init__(self, serv_addr: str, serv_port: int, camera: Any = None) -> None:
         """ServerDetector constructor.
 
         Args:
