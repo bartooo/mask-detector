@@ -6,7 +6,6 @@ from DetectorExceptions.ConnectionExceptions import validate_port
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton
 import socket
 from DetectWindowUI import Ui_DetectDialog
-from ResultDialog import ResultDialog
 from ResultWindow import ResultWindow
 
 

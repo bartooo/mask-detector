@@ -1,6 +1,4 @@
-import cv2
 import numpy as np
-import sys
 from DetectorExceptions.DataExceptions import validate_datapacker_params
 import datetime
 
@@ -12,7 +10,7 @@ class DataPacker(object):
         decision: str,
         percentage: float,
         time_sended: datetime.time = None,
-    ):
+    ) -> None:
         """DataPacker construtor.
 
         Args:
