@@ -4,7 +4,7 @@ import cv2
 import pickle
 import struct
 import errno
-from datetime import  datetime
+from datetime import datetime
 from typing import Any
 from ServerDetector.face_mask_detector import FaceMaskDetector
 from ServerDetector.parameters import (
@@ -22,7 +22,7 @@ class ServerDetector:
     image from camera and sends it to connected host
     """
 
-    def __init__(self, serv_addr: str, serv_port: int, camera: Any = None) ->None:
+    def __init__(self, serv_addr: str, serv_port: int, camera: Any = None) -> None:
         """ServerDetector constructor.
 
         Args:
