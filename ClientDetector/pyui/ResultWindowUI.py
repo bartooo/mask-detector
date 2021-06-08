@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtMultimediaWidgets import QVideoWidget
 
 
 class Ui_ResultWindow(object):
@@ -155,6 +156,3 @@ class Ui_ResultWindow(object):
         self.button_read_restrictions.setText(
             _translate("ResultWindow", "READ RESTRICTIONS")
         )
-
-
-from PyQt5.QtMultimediaWidgets import QVideoWidget

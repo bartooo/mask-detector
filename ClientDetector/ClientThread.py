@@ -13,7 +13,14 @@ from ClientDetector.LoggingStructure import LoggingList, LoggingStructure
 
 
 class ClientThread(QThread):
+    """Class of Thread which is responsible for receiving data from server."""
+
     def __init__(self, parent: typing.Optional[QObject]) -> None:
+        """ClientThread constructor.
+
+        Args:
+            parent (typing.Optional[QObject]): parent of QObject
+        """
         super().__init__(parent=parent)
         self._finish = False
         self._run_seconds = 1
@@ -32,39 +39,55 @@ class ClientThread(QThread):
     client_socket = None
 
     @property
-    def run_seconds(self):
+    def run_seconds(self) -> int:
+        """Run_seconds getter.
+
+        Returns:
+            int: run_seconds
+        """
         return self._run_seconds
 
     @run_seconds.setter
-    def run_seconds(self, value: bool):
+    def run_seconds(self, value: int) -> None:
+        """Run_seconds setter.
+
+        Args:
+            value (int): value to set
+        """
         self._run_seconds = value
 
     @property
-    def finish(self):
+    def finish(self) -> bool:
+        """Finish getter.
+
+        Returns:
+            bool: finish
+        """
         return self._finish
 
     @finish.setter
-    def finish(self, value: bool):
+    def finish(self, value: bool) -> None:
+        """Finish setter
+
+        Args:
+            value (bool): value to set
+        """
         self._finish = value
 
     def run(self):
-        # payload_size = struct.calcsize("Q")
+        """Main thread running algorithm."""
         try:
+            # measuring for 5 seconds
             while not self.finish and self.run_seconds < 6:
-                # while loop to get size of receiving data
+                # getting data from server
                 data_recv_pickled = self.data_getter.get(self.client_socket)
                 # unpickle what we got
                 data_recv = pickle.loads(data_recv_pickled)
-                # show image and if q pressed - stop
                 delay = (
                     data_recv.time_sended.total_seconds() * 1000
                     if (type(data_recv.time_sended) is datetime.timedelta)
                     else "N/A"
                 )
-                # print(
-                #     f"[CLIENT] GOT IMAGE AT TIME: {data_recv.decision} | WITH PERCENTAGE: {data_recv.percentage}% | DIFF: {delay}"
-                # )
-
                 self.logging_list.add_element(
                     LoggingStructure(datetime.datetime.now(), data_recv.decision, delay)
                 )
@@ -77,14 +100,17 @@ class ClientThread(QThread):
                 self.frame = convertToQtFormat.scaled(150, 150, Qt.KeepAspectRatio)
                 self.confidence = f"{data_recv.percentage:.3f}"
                 self.prediction = f"{data_recv.decision}"
+                # async setting image on label
                 self.change_pixmap.emit(
                     convertToQtFormat.scaled(350, 350, Qt.KeepAspectRatio)
                 )
+                # async setting delay label
                 self.change_conf_label.emit(self.confidence)
                 if type(data_recv.time_sended) is datetime.timedelta:
                     self.change_delay_label.emit(
                         f"{data_recv.time_sended.total_seconds()*1000:.3f}"
                     )
+                # async setting prediction label
                 self.change_pred_label.emit(self.prediction)
                 if self.run_seconds == 1:
                     self._send_frame()
@@ -99,7 +125,8 @@ class ClientThread(QThread):
         except (struct.error) as e:
             self.client_socket.close()
 
-    def _send_frame(self):
+    def _send_frame(self) -> None:
+        """Function emits in history."""
         self.add_image.emit(
             self.frame, self.confidence, self.prediction, self.run_seconds
         )
