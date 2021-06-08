@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any, Tuple
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -41,7 +41,7 @@ class FaceMaskDetector:
         if ds:
             self._ds = ds
 
-    def create(self):
+    def create(self) ->None:
         self._create_model()
         self._compile_model()
         self._train_model()
@@ -88,10 +88,10 @@ class FaceMaskDetector:
     def save_model(self, path: str) -> None:
         self._model.save(path, overwrite=True)
 
-    def get_model_summary(self):
+    def get_model_summary(self) ->Any:
         return self._model.summary()
 
-    def _detect_faces(self, img_array):
+    def _detect_faces(self, img_array :np.array) ->Any:
         gray = cv2.cvtColor(img_array, cv2.COLOR_BGR2GRAY)
         rects = self._face_detector.detectMultiScale(
             gray,
@@ -102,11 +102,11 @@ class FaceMaskDetector:
         )
         return rects
 
-    def _draw_info_on_image_with_face(self, img_haar, x, y, w, h, predicted_class):
+    def _draw_info_on_image_with_face(self, img_haar:np.array, x:int, y:int, w:int, h:int, predicted_class:str) ->None:
         # draw the face bounding box on the image
         cv2.rectangle(img_haar, (x, y), (x + w, y + h), COLOR_DICT[predicted_class], 3)
 
-    def _draw_info_on_image_without_face(self, predicted_class, img_haar):
+    def _draw_info_on_image_without_face(self, predicted_class:str, img_haar:np.array) ->None:
         textsize = cv2.getTextSize(predicted_class, cv2.FONT_HERSHEY_DUPLEX, 2, 1)[0]
         cv2.putText(
             img_haar,
@@ -121,7 +121,7 @@ class FaceMaskDetector:
             3,
         )
 
-    def predict_img(self, img_array: np.array):
+    def predict_img(self, img_array: np.array) ->Tuple[str, float, np.array]:
         """
         Predicts to which class belongs given image array.
 
