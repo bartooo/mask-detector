@@ -6,6 +6,8 @@ from DetectorExceptions.ConnectionExceptions import validate_port
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton
 import socket
 from DetectWindowUI import Ui_DetectDialog
+from ResultDialog import ResultDialog
+from ResultWindow import ResultWindow
 
 
 class DetectWindow(QDialog, Ui_DetectDialog):
@@ -199,12 +201,8 @@ class DetectWindow(QDialog, Ui_DetectDialog):
 
     def show_result(self):
         self._destroy_thread()
-        self._clear_stats_labels()
-        self.conf_label.destroy()
-        self.delay_label.destroy()
-        self.pred_label.destroy()
-        self.main_image_label.setText(f"Result : {self._get_final_pred()}")
-        self._destroy_thread()
+        resultDialog = ResultWindow(self._get_final_pred(), parent=self)
+        resultDialog.show()
 
     def _destroy_thread(self):
         if self.th:
