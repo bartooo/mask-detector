@@ -1,13 +1,25 @@
 import socket
 import struct
+import socket
 
 
 class DataGetter:
-    def __init__(self) -> None:
+    """Class represents getter of data from server."""
+
+    def __init__(self):
+        """Constructor of DataGetter."""
         self.data = b""
         self.payload_size = struct.calcsize("Q")
 
     def get(self, client_socket: socket.socket) -> bytes:
+        """
+
+        Args:
+            client_socket (socket.socket): client's socket
+
+        Returns:
+            bytes: series of bytes received
+        """
         while len(self.data) < self.payload_size:
             packet = client_socket.recv(4 * 1024)  # 4KB
             if not packet:

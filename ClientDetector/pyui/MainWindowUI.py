@@ -80,8 +80,6 @@ class Ui_MainWindow(object):
         self.warning_label.setStyleSheet(
             'QLabel[is_hidden="false"]{\n'
             "    color: #cfab2d;\n"
-            "    border: 1px solid #cfab2d;\n"
-            "    border-radius: 10px;\n"
             "    min-height: 15px;\n"
             "    max-height: 15px;\n"
             "    font-family: sans-serif;\n"
@@ -93,8 +91,6 @@ class Ui_MainWindow(object):
             "}\n"
             'QLabel[is_hidden="true"]{\n'
             "    color: #2a292e;\n"
-            "    border: 1px solid #2a292e;\n"
-            "    border-radius: 10px;\n"
             "    min-height: 15px;\n"
             "    max-height: 15px;\n"
             "    font-family: sans-serif;\n"

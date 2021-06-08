@@ -112,8 +112,6 @@ QPushButton:hover{
           <property name="styleSheet">
            <string notr="true">QLabel[is_hidden=&quot;false&quot;]{
     color: #cfab2d;
-    border: 1px solid #cfab2d;
-    border-radius: 10px;
 	min-height: 15px;
 	max-height: 15px;
 	font-family: sans-serif;
@@ -125,8 +123,6 @@ QPushButton:hover{
 }
 QLabel[is_hidden=&quot;true&quot;]{
     color: #2a292e;
-    border: 1px solid #2a292e;
-    border-radius: 10px;
 	min-height: 15px;
 	max-height: 15px;
 	font-family: sans-serif;

@@ -35,7 +35,7 @@ class Ui_DetectDialog(object):
         self.title_label.setMinimumSize(QtCore.QSize(0, 30))
         font = QtGui.QFont()
         font.setFamily("sans-serif")
-        font.setPointSize(-1)
+        # font.setPointSize(-1)
         font.setBold(True)
         font.setItalic(False)
         font.setWeight(75)

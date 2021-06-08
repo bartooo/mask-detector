@@ -27,7 +27,6 @@ mask_detector = FaceMaskDetector(
         ("./ServerDetector/images/ronaldo.jpg", "without_mask"),
         ("./ServerDetector/images/radcliffe_without_mask.jpg", "without_mask"),
         ("./ServerDetector/images/watson_without_mask.jpg", "without_mask"),
-        ("./ServerDetector/images/ed_without_mask.jpg", "without_mask"),
         ("./ServerDetector/images/popek_without_mask.jpg", "without_mask"),
     ],
 )
