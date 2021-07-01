@@ -42,15 +42,13 @@ class FaceMaskDetector:
             self._ds = ds
 
     def create(self) -> None:
-        """Function creates model, compiles it and trains.
-        """
+        """Function creates model, compiles it and trains."""
         self._create_model()
         self._compile_model()
         self._train_model()
 
     def _create_model(self) -> None:
-        """Function creates model.
-        """
+        """Function creates model."""
         data_augmentation = keras.Sequential(
             [
                 layers.experimental.preprocessing.RandomFlip(
@@ -78,8 +76,7 @@ class FaceMaskDetector:
         )
 
     def _compile_model(self) -> None:
-        """Function compiles model.
-        """
+        """Function compiles model."""
         self._model.compile(
             optimizer="adam",
             loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -87,8 +84,7 @@ class FaceMaskDetector:
         )
 
     def _train_model(self) -> None:
-        """Function trains model.
-        """
+        """Function trains model."""
         self._history = self._model.fit(
             self._ds.train_ds, validation_data=self._ds.val_ds, epochs=EPOCHS
         )

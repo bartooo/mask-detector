@@ -74,7 +74,8 @@ python .\mainClient.py
 ```
 6. Go to _SETTINGS_, type server name in correct input and _TEST CONNECTION_, you should see similiar result:
 
-![CORRECT SETTINGS](https://user-images.githubusercontent.com/59453698/124134191-e0612a80-da82-11eb-941a-37c6bb2fa7a9.png)
+![CORRECT SETTINGS](https://user-images.githubusercontent.com/59453698/124145795-67b39b80-da8d-11eb-9f8c-5a34d49e3094.png)
+
 
 7. If you see correct frame, click _CHANGE SERVER_.
 
