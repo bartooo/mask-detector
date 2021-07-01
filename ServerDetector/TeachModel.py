@@ -1,3 +1,5 @@
+    """Script helps carrying out teaching mask-detecting model.
+    """
 import cv2
 from ServerDetector.face_mask_detector import FaceMaskDetector
 from ServerDetector.dataset import Dataset
