@@ -42,11 +42,13 @@ class FaceMaskDetector:
             self._ds = ds
 
     def create(self) -> None:
+        """Function creates model, compiles it and trains."""
         self._create_model()
         self._compile_model()
         self._train_model()
 
     def _create_model(self) -> None:
+        """Function creates model."""
         data_augmentation = keras.Sequential(
             [
                 layers.experimental.preprocessing.RandomFlip(
@@ -74,6 +76,7 @@ class FaceMaskDetector:
         )
 
     def _compile_model(self) -> None:
+        """Function compiles model."""
         self._model.compile(
             optimizer="adam",
             loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -81,17 +84,36 @@ class FaceMaskDetector:
         )
 
     def _train_model(self) -> None:
+        """Function trains model."""
         self._history = self._model.fit(
             self._ds.train_ds, validation_data=self._ds.val_ds, epochs=EPOCHS
         )
 
     def save_model(self, path: str) -> None:
+        """Function saves model.
+
+        Args:
+            path (str): path in which model will be saved
+        """
         self._model.save(path, overwrite=True)
 
     def get_model_summary(self) -> Any:
+        """Function returns summary of model.
+
+        Returns:
+            Any: summary of model.
+        """
         return self._model.summary()
 
     def _detect_faces(self, img_array: np.array) -> Any:
+        """Function detects faces on given image.
+
+        Args:
+            img_array (np.array): image to detect faces from model.
+
+        Returns:
+            Any: positions of faces
+        """
         gray = cv2.cvtColor(img_array, cv2.COLOR_BGR2GRAY)
         rects = self._face_detector.detectMultiScale(
             gray,
@@ -105,12 +127,28 @@ class FaceMaskDetector:
     def _draw_info_on_image_with_face(
         self, img_haar: np.array, x: int, y: int, w: int, h: int, predicted_class: str
     ) -> None:
+        """Function draws info on faces.
+
+        Args:
+            img_haar (np.array): image after haar face detection
+            x (int): x coordinate
+            y (int): y coordinate
+            w (int): width of rectangle
+            h (int): height of rectangle
+            predicted_class (str): name of predicted class
+        """
         # draw the face bounding box on the image
         cv2.rectangle(img_haar, (x, y), (x + w, y + h), COLOR_DICT[predicted_class], 3)
 
     def _draw_info_on_image_without_face(
         self, predicted_class: str, img_haar: np.array
     ) -> None:
+        """[summary]
+
+        Args:
+            predicted_class (str): [description]
+            img_haar (np.array): [description]
+        """
         textsize = cv2.getTextSize(predicted_class, cv2.FONT_HERSHEY_DUPLEX, 2, 1)[0]
         cv2.putText(
             img_haar,
